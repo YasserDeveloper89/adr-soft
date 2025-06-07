@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ADR Soft - Plataforma Meteorología e Hidrología</title>
+<title>ADR Soft - Meteorología e Hidrología</title>
 <style>
-  /* Reset y base */
+  /* Reset y básicos */
   * {
     box-sizing: border-box;
   }
-  body, html {
+  html, body {
     margin: 0; padding: 0;
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f0f0f0;
     background:
       linear-gradient(to top, #1a293a 0%, #486d8c 50%, #758fa1 100%);
-    color: #f0f0f0;
+    position: relative;
+    overflow-x: hidden;
   }
-  /* Fondo montañas simuladas con CSS */
   body::before {
     content: "";
     position: fixed;
@@ -31,229 +32,264 @@
     pointer-events: none;
   }
 
-  /* Login y app */
+  /* Contenedores principales */
   #login, #app {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   #login {
-    background: rgba(15,23,42,0.85);
+    background: transparent; /* permite ver fondo general */
     flex-direction: column;
   }
+
   form {
-    background: rgba(33,45,65,0.85);
+    background: rgba(33, 45, 65, 0.85);
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.7);
     width: 320px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.6);
   }
-  input {
+
+  form h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  input[type="text"],
+  input[type="password"] {
     width: 100%;
-    padding: 12px;
+    padding: 0.5rem 0.75rem;
     margin-bottom: 1rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     font-size: 1rem;
-    background: #1e293b;
-    color: #f0f0f0;
   }
-  input::placeholder {
-    color: #8fa4b9;
-  }
+
   button {
     width: 100%;
-    padding: 12px;
-    background: #2563eb;
+    background-color: #4a90e2;
     border: none;
-    border-radius: 6px;
+    padding: 0.75rem;
     color: white;
+    font-size: 1.1rem;
     font-weight: 700;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  button:hover {
-    background: #1e40af;
-  }
-  #errorMsg {
-    color: #ef4444;
-    margin-top: -0.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    text-align: center;
-    display: none;
+    transition: background-color 0.3s ease;
   }
 
-  /* App estructura */
-  #app {
-    display: none;
-    flex-direction: column;
+  button:hover {
+    background-color: #357ABD;
   }
-  #app-container {
+
+  /* App layout */
+  #app {
     display: flex;
     height: 100vh;
-    overflow: hidden;
   }
 
-  /* Menú lateral */
-  #menu {
-    background: rgba(15,23,42,0.95);
-    width: 280px;
+  nav {
+    width: 260px;
+    background: rgba(20, 35, 50, 0.95);
+    padding: 1rem 0;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.8);
+    border-right: 1px solid #335d90;
+    overflow-y: auto;
   }
-  #menu h2 {
-    margin: 0 0 1rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-    border-bottom: 2px solid #2563eb;
-    padding-bottom: 0.5rem;
+
+  nav button.logout-btn {
+    margin: 1rem auto 0;
+    width: 90%;
+    background: #b3383a;
   }
-  #menu button {
+
+  nav button.logout-btn:hover {
+    background: #8c292b;
+  }
+
+  nav button.section-btn {
     background: transparent;
     border: none;
-    color: #cbd5e1;
-    padding: 0.4rem 0.8rem;
-    margin: 2px 0;
+    color: #cbd7e6;
+    padding: 0.85rem 1.5rem;
     text-align: left;
+    font-weight: 600;
     font-size: 1rem;
-    border-left: 4px solid transparent;
+    border-bottom: 1px solid #335d90;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 4px;
-  }
-  #menu button:hover,
-  #menu button.active {
-    background: #2563eb;
-    color: white;
-    border-left-color: #3b82f6;
-  }
-  #logoutBtn {
-    margin-top: auto;
-    background: #dc2626 !important;
-    font-weight: 700;
+    transition: background-color 0.25s ease;
   }
 
-  /* Contenido */
-  #content {
-    flex-grow: 1;
-    padding: 2rem 3rem;
+  nav button.section-btn:hover,
+  nav button.section-btn.active {
+    background-color: #4a90e2;
+    color: #fff;
+  }
+
+  main.content {
+    flex: 1;
+    padding: 1.5rem 2rem;
     overflow-y: auto;
-    background: rgba(33, 45, 65, 0.9);
   }
-  #content h1 {
+
+  main.content h1 {
     margin-top: 0;
-    font-weight: 900;
-    font-size: 2.5rem;
-    color: #3b82f6;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0f0f0;
   }
-  #content p {
+
+  main.content p {
     font-size: 1.1rem;
     line-height: 1.5;
-    color: #cbd5e1;
+    max-width: 800px;
   }
 
-  /* Responsive móvil - menú colapsable */
-  @media (max-width: 768px) {
-    #app-container {
-      flex-direction: column;
-    }
-    #menu {
-      width: 100%;
-      display: none;
-      flex-direction: column;
-      padding: 0.5rem 1rem;
-      box-shadow: none;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    #menu.show {
-      display: flex;
-    }
-    #menuToggle {
-      background: #2563eb;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      border-radius: 0;
-      text-align: left;
-      font-size: 1.2rem;
-      user-select: none;
-      display: block;
-    }
-    #content {
-      padding: 1rem 1.5rem;
-    }
+  /* Scrollbar personalizado para nav */
+  nav::-webkit-scrollbar {
+    width: 8px;
   }
-  @media (min-width: 769px) {
-    #menuToggle {
-      display: none;
+  nav::-webkit-scrollbar-thumb {
+    background: #4a90e2;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    #app {
+      flex-direction: column;
+    }
+    nav {
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      overflow-x: auto;
+      border-right: none;
+      border-bottom: 1px solid #335d90;
+    }
+    nav button.section-btn {
+      flex: 1 0 auto;
+      border-bottom: none;
+      border-right: 1px solid #335d90;
+      text-align: center;
+      padding: 1rem 0.5rem;
+    }
+    nav button.logout-btn {
+      margin: 0 1rem;
+      width: auto;
+      align-self: center;
     }
   }
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
-<div id="login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+<div id="login">
   <form id="loginForm" autocomplete="off">
-    <h2 id="loginTitle">Iniciar sesión</h2>
-    <input type="text" id="username" placeholder="Usuario" required autocomplete="username" />
-    <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password" />
-    <p id="errorMsg" role="alert"></p>
+    <h2>Iniciar Sesión</h2>
+    <label for="username">Usuario</label>
+    <input id="username" type="text" required autocomplete="username" />
+    <label for="password">Contraseña</label>
+    <input id="password" type="password" required autocomplete="current-password" />
     <button type="submit">Entrar</button>
   </form>
 </div>
 
-<!-- APP -->
-<div id="app" role="main" aria-hidden="true">
-  <button id="menuToggle" aria-label="Mostrar menú">☰ Menú</button>
-  <div id="app-container">
-    <nav id="menu" aria-label="Menú principal" tabindex="0">
-      <h2>ADR Soft</h2>
-      <button data-section="Tablero">Tablero</button>
-      <button data-section="GIS">GIS</button>
-      <button data-section="Mapa GIS">Mapa GIS</button>
-      <button data-section="Visor">Visor</button>
-      <button data-section="Fast Viewer">Fast Viewer</button>
-      <button data-section="Estaciones">Estaciones</button>
-      <button data-section="Monitoring">Monitoring</button>
-      <button data-section="Informe personalizado">Informe personalizado</button>
-      <button data-section="Informe rosa de los vientos">Informe rosa de los vientos</button>
-      <button data-section="Consecutive Rains">Consecutive Rains</button>
-      <button data-section="Vistas">Vistas</button>
-      <button data-section="Sinópticos">Sinópticos</button>
-      <button data-section="Custom Synoptics">Custom Synoptics</button>
-      <button data-section="Supervisor">Supervisor</button>
-      <button data-section="Estadísticas de red">Estadísticas de red</button>
-      <button data-section="Registros">Registros</button>
-      <button data-section="Módulos">Módulos</button>
-      <button data-section="Túnel">Túnel</button>
-      <button data-section="Validador">Validador</button>
-      <button id="logoutBtn">Cerrar sesión</button>
-    </nav>
-    <main id="content" tabindex="0">
-      <h1>Bienvenido a ADR Soft</h1>
-      <p>Seleccione una sección del menú para comenzar.</p>
-    </main>
-  </div>
+<div id="app" style="display:none;">
+  <nav>
+    <button class="section-btn active" data-section="Tablero">Tablero</button>
+    <button class="section-btn" data-section="GIS">GIS</button>
+    <button class="section-btn" data-section="Mapa GIS">Mapa GIS</button>
+    <button class="section-btn" data-section="Visor">Visor</button>
+    <button class="section-btn" data-section="Fast Viewer">Fast Viewer</button>
+    <button class="section-btn" data-section="Estaciones">Estaciones</button>
+    <button class="section-btn" data-section="Monitoring">Monitoring</button>
+    <button class="section-btn" data-section="Informe personalizado">Informe personalizado</button>
+    <button class="section-btn" data-section="Informe rosa de los vientos">Informe rosa de los vientos</button>
+    <button class="section-btn" data-section="Consecutive Rains">Consecutive Rains</button>
+    <button class="section-btn" data-section="Vistas">Vistas</button>
+    <button class="section-btn" data-section="Sinópticos">Sinópticos</button>
+    <button class="section-btn" data-section="Custom Synoptics">Custom Synoptics</button>
+    <button class="section-btn" data-section="Supervisor">Supervisor</button>
+    <button class="section-btn" data-section="Estadísticas de red">Estadísticas de red</button>
+    <button class="section-btn" data-section="Registros">Registros</button>
+    <button class="section-btn" data-section="Módulos">Módulos</button>
+    <button class="section-btn" data-section="Túnel">Túnel</button>
+    <button class="section-btn" data-section="Validador">Validador</button>
+    <button class="logout-btn">Cerrar Sesión</button>
+  </nav>
+  <main class="content">
+    <h1>Tablero</h1>
+    <p>Bienvenido al sistema ADR Soft. Seleccione una sección para visualizar su información.</p>
+  </main>
 </div>
 
 <script>
-  const validUser = 'admin';
-  const validPass = '1234';
-
   const loginDiv = document.getElementById('login');
   const appDiv = document.getElementById('app');
   const loginForm = document.getElementById('loginForm');
-  const errorMsg = document.getElementById('errorMsg');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const menuButtons = document.querySelectorAll('#menu button[data-section]');
-  const content = document.getElementById('content');
-  const menu = document.get
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const navButtons = document.querySelectorAll('nav .section-btn');
+  const contentMain = document.querySelector('main.content');
+  const logoutBtn = document.querySelector('nav .logout-btn');
+
+  // Usuario y contraseña válidos - puedes cambiar aquí o validar desde backend en producción
+  const validUser = 'admin';
+  const validPass = '1234';
+
+  // Función para mostrar sección
+  function showSection(name) {
+    // Desactivar todos botones
+    navButtons.forEach(btn => btn.classList.remove('active'));
+    // Activar seleccionado
+    const btn = [...navButtons].find(b => b.dataset.section === name);
+    if (btn) btn.classList.add('active');
+
+    // Cambiar contenido main
+    contentMain.innerHTML = `<h1>${name}</h1><p>Contenido para la sección "${name}" en desarrollo.</p>`;
+  }
+
+  // Login submit
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+
+    if(user === validUser && pass === validPass) {
+      loginDiv.style.display = 'none';
+      appDiv.style.display = 'flex';
+      showSection('Tablero');
+      // Limpiar inputs
+      loginForm.reset();
+    } else {
+      alert('Usuario o contraseña incorrectos.');
+    }
+  });
+
+  // Manejo clic en secciones
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      showSection(btn.dataset.section);
+      // En móvil cierra menú si quieres (aquí menú fijo, pero podrías ocultar si fuera colapsable)
+    });
+  });
+
+  // Logout
+  logoutBtn.addEventListener('click', () => {
+    appDiv.style.display = 'none';
+    loginDiv.style.display = 'flex';
+  });
+</script>
+</body>
+</html>
