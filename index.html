@@ -3,29 +3,90 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Aplicación Meteorología e Hidrología</title>
+<title>App Meteorología e Hidrología</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
   * {
     box-sizing: border-box;
   }
-
   body, html {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
+    height: 100vh;
     font-family: 'Inter', sans-serif;
     background: url('Fondo.jpg') no-repeat center center fixed;
     background-size: cover;
-    height: 100vh;
     color: #cbd5e1;
-    overflow: hidden;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 10;
+    display: none;
   }
 
-  #app {
+  /* Contenedor app/login */
+  #container {
     display: flex;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(15, 23, 42, 0.75);
+    color: #cbd5e1;
+  }
+
+  /* Login */
+  #login {
+    margin: auto;
+    background: rgba(20, 30, 50, 0.95);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    width: 320px;
+  }
+  #login h2 {
+    margin-bottom: 1.5rem;
+    color: #a1caff;
+  }
+  #login label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  #login input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #1e293b;
+    color: #cbd5e1;
+    outline-offset: 2px;
+    outline-color: #3a87ad;
+  }
+  #login input:focus {
+    outline-style: solid;
+  }
+  #login button {
+    width: 100%;
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1rem;
+    background: #3a87ad;
+    border: none;
+    border-radius: 6px;
+    color: #e0f2ff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #login button:hover {
+    background: #2f6b8a;
+  }
+  #login .error {
+    color: #f87171;
+    margin-bottom: 1rem;
+    font-weight: 600;
   }
 
   /* Botón hamburguesa */
@@ -51,30 +112,26 @@
 
   /* Menú lateral */
   #menu {
-    width: 250px;
-    background: rgba(20, 30, 50, 0.95);
+    width: 260px;
+    background: rgba(20, 30, 50, 0.98);
     padding-top: 15px;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
-    box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+    box-shadow: 3px 0 15px rgba(0,0,0,0.4);
     z-index: 1000;
   }
-
   #menu.collapsed {
     transform: translateX(-100%);
   }
-
   #menu header {
-    padding: 0 20px 15px;
-    font-size: 1.25rem;
+    padding: 0 25px 15px;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #a1caff;
     border-bottom: 1px solid rgba(255,255,255,0.12);
     user-select: none;
   }
-
-  /* Lista del menú */
   #menuList {
     list-style: none;
     padding: 0;
@@ -82,59 +139,64 @@
     flex-grow: 1;
     overflow-y: auto;
   }
-
   #menuList > li {
     border-bottom: 1px solid rgba(255,255,255,0.12);
     margin: 0;
   }
-
-  /* Botones del menú */
+  #menuList > li:last-child {
+    border-bottom: none;
+  }
   #menuList button {
     width: 100%;
-    padding: 10px 20px;
+    padding: 12px 25px;
     background: transparent;
     border: none;
     color: #cbd5e1;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     text-align: left;
     cursor: pointer;
     transition: background 0.25s ease, color 0.25s ease;
-    line-height: 1.2;
+    line-height: 1.3;
   }
-
   #menuList button:hover,
   #menuList button.active {
     background: rgba(58, 135, 173, 0.9);
     color: #e0f2ff;
   }
 
-  #menuList > li:last-child {
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-  }
-
   /* Contenido */
   #content {
     flex-grow: 1;
-    padding: 20px 30px;
+    padding: 25px 35px;
     overflow-y: auto;
-    background: rgba(15, 23, 42, 0.75);
     color: #e2e8f0;
-    transition: margin-left 0.3s ease;
+    user-select: text;
+  }
+  #content h1 {
+    margin-top: 0;
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+  #content p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #cbd5e1;
   }
 
-  /* Scroll menú y contenido */
+  /* Scroll barras */
   #menuList::-webkit-scrollbar,
   #content::-webkit-scrollbar {
-    width: 6px;
+    width: 7px;
   }
   #menuList::-webkit-scrollbar-thumb,
   #content::-webkit-scrollbar-thumb {
-    background: rgba(58,135,173,0.6);
-    border-radius: 3px;
+    background: rgba(58,135,173,0.7);
+    border-radius: 4px;
   }
 
-  /* Desktop - menú visible y margen */
+  /* Desktop - menú visible */
   @media (min-width: 768px) {
     #menuToggle {
       display: none;
@@ -143,9 +205,6 @@
       transform: translateX(0);
       position: relative;
       box-shadow: none;
-    }
-    #content {
-      margin-left: 0;
     }
   }
 
@@ -166,20 +225,37 @@
       top: 0;
       left: 0;
       height: 100vh;
-      background: rgba(20, 30, 50, 0.98);
     }
     #content {
-      margin-left: 0;
       padding: 20px 15px;
     }
   }
 </style>
 </head>
 <body>
+
+  <!-- Botón para menú en móvil -->
   <button id="menuToggle" aria-label="Abrir menú">&#9776;</button>
-  <div id="app" role="main">
-    <nav id="menu" aria-label="Menú de navegación" class="collapsed">
-      <header>Meteorología &amp; Hidrología</header>
+
+  <!-- Contenedor general -->
+  <div id="container">
+
+    <!-- Login -->
+    <main id="login" aria-label="Formulario de inicio de sesión">
+      <h2>Iniciar Sesión</h2>
+      <div id="errorMsg" class="error" role="alert" aria-live="assertive"></div>
+      <form id="loginForm" autocomplete="off" novalidate>
+        <label for="username">Usuario</label>
+        <input id="username" type="text" name="username" required autocomplete="username" />
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" name="password" required autocomplete="current-password" />
+        <button type="submit" aria-label="Iniciar sesión">Entrar</button>
+      </form>
+    </main>
+
+    <!-- Aplicación -->
+    <nav id="menu" class="collapsed" aria-label="Menú principal" role="navigation" aria-hidden="true">
+      <header>Meteorología & Hidrología</header>
       <ul id="menuList" role="menubar" aria-orientation="vertical" tabindex="0">
         <li role="none"><button role="menuitem" class="active" tabindex="0">Tablero</button></li>
         <li role="none"><button role="menuitem" tabindex="-1">GIS</button></li>
@@ -192,35 +268,4 @@
         <li role="none"><button role="menuitem" tabindex="-1">Informe rosa de los vientos</button></li>
         <li role="none"><button role="menuitem" tabindex="-1">Consecutive Rains</button></li>
         <li role="none"><button role="menuitem" tabindex="-1">Vistas</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Sinópticos</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Custom Synoptics</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Supervisor</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Estadísticas de red</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Registros</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Módulos</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Túnel</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Validador</button></li>
-      </ul>
-    </nav>
-    <section id="content" tabindex="0" aria-live="polite" aria-atomic="true">
-      <h1>Tablero</h1>
-      <p>Bienvenido al panel principal de meteorología e hidrología. Selecciona una sección para visualizar su contenido.</p>
-    </section>
-  </div>
-
-<script>
-  const menuToggle = document.getElementById('menuToggle');
-  const menu = document.getElementById('menu');
-  const menuButtons = document.querySelectorAll('#menuList button');
-  const content = document.getElementById('content');
-
-  // Alternar menú en móvil
-  menuToggle.addEventListener('click', () => {
-    menu.classList.toggle('collapsed');
-  });
-
-  const sectionsContent = {
-    "Tablero": "<h1>Tablero</h1><p>Bienvenido al panel principal de meteorología e hidrología. Selecciona una sección para visualizar su contenido.</p>",
-    "GIS": "<h1>GIS</h1><p>Información y herramientas GIS.</p>",
-    "Mapa GIS": "<h1>Mapa GIS</h1><p>Visualización detallada del mapa GIS.</p>",
-    "Visor": "<h1>Vis
+        <li role="none"><button role="menuitem" tabindex="-1">Sinópt
