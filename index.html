@@ -67,7 +67,6 @@
   input[type=text]:focus, input[type=password]:focus {
     outline-style: solid;
   }
-  /* Contenedor del input password para posicionar el botón */
   .password-container {
     position: relative;
   }
@@ -148,7 +147,7 @@
   }
   #menuList button {
     width: 100%;
-    padding: 12px 2rem;
+    padding: 10px 2rem;
     background: transparent;
     border: none;
     color: #cbd5e1;
@@ -172,6 +171,8 @@
     overflow-y: auto;
     color: #e2e8f0;
     user-select: text;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
   }
   #content h1 {
     margin-top: 0;
@@ -227,6 +228,7 @@
     }
     #content {
       padding: 80px 20px 20px 20px;
+      margin-left: 0;
     }
   }
 </style>
@@ -234,7 +236,7 @@
 <body>
 <div id="container">
   <!-- Login -->
-  <section id="login">
+  <section id="login" aria-label="Formulario de inicio de sesión">
     <form id="loginForm" novalidate>
       <h2>Iniciar Sesión</h2>
       <div class="error" id="loginError" role="alert" aria-live="assertive" style="display:none;"></div>
@@ -252,46 +254,6 @@
   </section>
 
   <!-- App -->
-  <section id="app" style="display:none;">
+  <section id="app" aria-label="Aplicación principal" style="display:none;">
     <button id="menuToggle" aria-label="Mostrar/Ocultar menú">☰</button>
-    <nav id="menu" class="collapsed" aria-label="Menú principal">
-      <header>Meteorología & Hidrología</header>
-      <ul id="menuList" role="menu">
-        <li><button role="menuitem" data-section="Tablero">Tablero</button></li>
-        <li><button role="menuitem" data-section="GIS">GIS</button></li>
-        <li><button role="menuitem" data-section="Mapa GIS">Mapa GIS</button></li>
-        <li><button role="menuitem" data-section="Visor">Visor</button></li>
-        <li><button role="menuitem" data-section="Fast Viewer">Fast Viewer</button></li>
-        <li><button role="menuitem" data-section="Estaciones">Estaciones</button></li>
-        <li><button role="menuitem" data-section="Monitoring">Monitoring</button></li>
-        <li><button role="menuitem" data-section="Informe personalizado">Informe personalizado</button></li>
-        <li><button role="menuitem" data-section="Informe rosa de los vientos">Informe rosa de los vientos</button></li>
-        <li><button role="menuitem" data-section="Consecutive Rains">Consecutive Rains</button></li>
-        <li><button role="menuitem" data-section="Vistas">Vistas</button></li>
-        <li><button role="menuitem" data-section="Sinópticos">Sinópticos</button></li>
-        <li><button role="menuitem" data-section="Custom Synoptics">Custom Synoptics</button></li>
-        <li><button role="menuitem" data-section="Supervisor">Supervisor</button></li>
-        <li><button role="menuitem" data-section="Estadísticas de red">Estadísticas de red</button></li>
-        <li><button role="menuitem" data-section="Registros">Registros</button></li>
-        <li><button role="menuitem" data-section="Módulos">Módulos</button></li>
-        <li><button role="menuitem" data-section="Túnel">Túnel</button></li>
-        <li><button role="menuitem" data-section="Validador">Validador</button></li>
-        <li><button role="menuitem" id="logoutBtn" style="border-top:1px solid rgba(255,255,255,0.12); margin-top: 10px; color:#f87171;">Cerrar sesión</button></li>
-      </ul>
-    </nav>
-    <main id="content" tabindex="0" aria-live="polite">
-      <h1>Bienvenido</h1>
-      <p>Seleccione una sección del menú para comenzar.</p>
-    </main>
-  </section>
-</div>
-
-<script>
-  const validUser = 'admin';
-  const validPass = '1234';
-
-  const loginSection = document.getElementById('login');
-  const appSection = document.getElementById('app');
-  const loginForm = document.getElementById('loginForm');
-  const loginError = document.getElementById('loginError');
-  const menu = document.getElementById('menu
+    <nav id="menu" class="collapsed" aria-label
