@@ -2,217 +2,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADR-SOFT</title>
+  <title>ADR Soft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }body {
-  background-image: url('Fondo.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  color: #fff;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 1rem;
-}
-
-#menuToggle {
-  font-size: 1.5rem;
-  background: none;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-
-nav {
-  position: fixed;
-  left: -250px;
-  top: 0;
-  height: 100%;
-  width: 250px;
-  background-color: rgba(0, 0, 0, 0.9);
-  transition: left 0.3s ease;
-  padding-top: 5rem;
-  z-index: 1000;
-}
-
-nav.open {
-  left: 0;
-}
-
-nav ul {
-  list-style: none;
-}
-
-nav ul li {
-  border-bottom: 1px solid #444;
-}
-
-nav ul li a {
-  display: block;
-  padding: 1rem;
-  color: #fff;
-  text-decoration: none;
-}
-
-nav ul li.logout a {
-  color: #ff4c4c;
-  font-weight: bold;
-}
-
-main {
-  margin-top: 4rem;
-  padding: 2rem;
-  margin-left: 0;
-  transition: margin-left 0.3s ease;
-}
-
-#content {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1.5rem;
-  border-radius: 8px;
-  max-width: 900px;
-  margin: auto;
-  min-height: 300px;
-}
-
-.hidden {
-  display: none;
-}
-
-#loginContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-}
-
-#loginBox {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #000;
-  max-width: 400px;
-  width: 100%;
-}
-
-#loginBox input {
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border: none;
-  border-radius: 5px;
-}
-
-#loginBox button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #28a745;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-#adrLogo {
-  width: 120px;
-  margin-bottom: 1rem;
-}
-
-.toggle-password {
-  position: relative;
-  float: right;
-  margin-top: -2rem;
-  margin-right: 1rem;
-  cursor: pointer;
-}
-
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background: url('Fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+    .login-container {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-container img {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 6px;
+    }
+    .login-container button {
+      padding: 0.75rem;
+      width: 100%;
+      background-color: #1e90ff;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .app {
+      display: none;
+    }
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 250px;
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .sidebar h2 {
+      margin-bottom: 1rem;
+    }
+    .sidebar button {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+    .sidebar button:last-child {
+      color: #ff6961;
+      border-top: 2px solid #ff6961;
+      margin-top: 1rem;
+    }
+    .menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      padding: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .content {
+      margin-left: 260px;
+      padding: 2rem;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
   </style>
 </head>
-<body>  <div id="loginContainer">
-    <img src="adrlogo.png" id="adrLogo" alt="ADR Logo">
-    <div id="loginBox">
-      <input type="text" id="username" placeholder="Usuario">
-      <input type="password" id="password" placeholder="Contraseña">
-      <span class="toggle-password" onclick="togglePassword()">👁️</span>
-      <button onclick="login()">Entrar</button>
+<body>
+  <div id="login" class="login-container">
+    <img src="adrlogo.png" alt="Logo" />
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="username" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <input type="checkbox" id="togglePass"> Ver contraseña
+    <button onclick="login()">Entrar</button>
+  </div><button id="menuToggle" class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div id="app" class="app">
+    <div class="sidebar" id="sidebar">
+      <h2>ADR Soft</h2>
+      <button onclick="showSection('tablero')">Tablero</button>
+      <button onclick="showSection('gis')">GIS</button>
+      <button onclick="showSection('mapa')">Mapa GIS</button>
+      <button onclick="showSection('visor')">Visor</button>
+      <button onclick="showSection('fast')">Fast Viewer</button>
+      <button onclick="showSection('estaciones')">Estaciones</button>
+      <button onclick="showSection('monitoring')">Monitoring</button>
+      <button onclick="showSection('informe')">Informe personalizado</button>
+      <button onclick="showSection('rosa')">Informe rosa de los vientos</button>
+      <button onclick="showSection('rain')">Consecutive Rains</button>
+      <button onclick="showSection('vistas')">Vistas</button>
+      <button onclick="showSection('sinopticos')">Sinópticos</button>
+      <button onclick="showSection('custom')">Custom Synoptics</button>
+      <button onclick="showSection('supervisor')">Supervisor</button>
+      <button onclick="showSection('estadisticas')">Estadísticas de red</button>
+      <button onclick="showSection('registros')">Registros</button>
+      <button onclick="showSection('modulos')">Módulos</button>
+      <button onclick="showSection('tunel')">Túnel</button>
+      <button onclick="showSection('validador')">Validador</button>
+      <button onclick="logout()">Cerrar sesión</button>
     </div>
-  </div>  <header id="appHeader" class="hidden">
-    <button id="menuToggle" onclick="toggleMenu()">☰</button>
-    <h1>ADR-SOFT</h1>
-  </header>  <nav id="sidebar">
-    <ul>
-      <li><a href="#" onclick="loadSection('Tablero')">Tablero</a></li>
-      <li><a href="#" onclick="loadSection('GIS')">GIS</a></li>
-      <li><a href="#" onclick="loadSection('Mapa GIS')">Mapa GIS</a></li>
-      <li><a href="#" onclick="loadSection('Visor')">Visor</a></li>
-      <li><a href="#" onclick="loadSection('Fast Viewer')">Fast Viewer</a></li>
-      <li><a href="#" onclick="loadSection('Estaciones')">Estaciones</a></li>
-      <li><a href="#" onclick="loadSection('Monitoring')">Monitoring</a></li>
-      <li><a href="#" onclick="loadSection('Informe personalizado')">Informe personalizado</a></li>
-      <li><a href="#" onclick="loadSection('Informe rosa de los vientos')">Informe rosa de los vientos</a></li>
-      <li><a href="#" onclick="loadSection('Consecutive Rains')">Consecutive Rains</a></li>
-      <li><a href="#" onclick="loadSection('Vistas')">Vistas</a></li>
-      <li><a href="#" onclick="loadSection('Sinópticos')">Sinópticos</a></li>
-      <li><a href="#" onclick="loadSection('Custom Synoptics')">Custom Synoptics</a></li>
-      <li><a href="#" onclick="loadSection('Supervisor')">Supervisor</a></li>
-      <li><a href="#" onclick="loadSection('Estadísticas de red')">Estadísticas de red</a></li>
-      <li><a href="#" onclick="loadSection('Registros')">Registros</a></li>
-      <li><a href="#" onclick="loadSection('Módulos')">Módulos</a></li>
-      <li><a href="#" onclick="loadSection('Túnel')">Túnel</a></li>
-      <li><a href="#" onclick="loadSection('Validador')">Validador</a></li>
-      <li class="logout"><a href="#" onclick="logout()">Cerrar sesión</a></li>
-    </ul>
-  </nav>  <main id="appMain" class="hidden">
-    <div id="content">
-      <h2>Bienvenido a ADR-SOFT</h2>
-      <p>Seleccione una sección del menú para comenzar.</p>
+    <div class="content">
+      <div id="tablero" class="section active">Contenido de Tablero</div>
+      <div id="gis" class="section">Contenido de GIS</div>
+      <div id="mapa" class="section">Contenido de Mapa GIS</div>
+      <div id="visor" class="section">Contenido de Visor</div>
+      <div id="fast" class="section">Contenido de Fast Viewer</div>
+      <div id="estaciones" class="section">Contenido de Estaciones</div>
+      <div id="monitoring" class="section">Contenido de Monitoring</div>
+      <div id="informe" class="section">Contenido de Informe personalizado</div>
+      <div id="rosa" class="section">Contenido de Rosa de los vientos</div>
+      <div id="rain" class="section">Contenido de Consecutive Rains</div>
+      <div id="vistas" class="section">Contenido de Vistas</div>
+      <div id="sinopticos" class="section">Contenido de Sinópticos</div>
+      <div id="custom" class="section">Contenido de Custom Synoptics</div>
+      <div id="supervisor" class="section">Contenido de Supervisor</div>
+      <div id="estadisticas" class="section">Contenido de Estadísticas de red</div>
+      <div id="registros" class="section">Contenido de Registros</div>
+      <div id="modulos" class="section">Contenido de Módulos</div>
+      <div id="tunel" class="section">Contenido de Túnel</div>
+      <div id="validador" class="section">Contenido de Validador</div>
     </div>
-  </main>  <script>
+  </div>  <script>
+    const loginContainer = document.getElementById("login");
+    const app = document.getElementById("app");
+    const password = document.getElementById("password");
+    document.getElementById("togglePass").addEventListener("change", function () {
+      password.type = this.checked ? "text" : "password";
+    });
+
     function login() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      if (user === 'admin' && pass === '1234') {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('appHeader').classList.remove('hidden');
-        document.getElementById('appMain').classList.remove('hidden');
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user === "admin" && pass === "1234") {
+        loginContainer.style.display = "none";
+        app.style.display = "block";
       } else {
-        alert('Credenciales incorrectas');
+        alert("Credenciales incorrectas");
       }
     }
 
     function logout() {
-      location.reload();
+      app.style.display = "none";
+      loginContainer.style.display = "block";
     }
 
-    function loadSection(name) {
-      document.getElementById('content').innerHTML = `<h2>${name}</h2><p>Contenido de la sección ${name}.</p>`;
-      document.getElementById('sidebar').classList.remove('open');
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach((sec) => {
+        sec.classList.remove("active");
+      });
+      document.getElementById(id).classList.add("active");
+      // Auto-close sidebar after selection (for mobile behavior)
+      document.getElementById("sidebar").style.display = "none";
     }
 
     function toggleMenu() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sidebar = document.getElementById("sidebar");
+      sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
     }
 
-    function togglePassword() {
-      const pwd = document.getElementById('password');
-      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    window.onload = () => {
+      document.getElementById("sidebar").style.display = "none";
     }
   </script></body>
-    </html>
+      </html>
