@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>App Meteorología e Hidrología</title>
+<title>Meteorología e Hidrología SaaS</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
@@ -11,110 +11,111 @@
     box-sizing: border-box;
   }
   body, html {
-    margin: 0; padding: 0;
-    height: 100vh;
+    margin: 0; padding: 0; height: 100vh;
     font-family: 'Inter', sans-serif;
     background: url('Fondo.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #cbd5e1;
   }
-  #overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.85);
-    z-index: 10;
-    display: none;
-  }
 
-  /* Contenedor app/login */
   #container {
-    display: flex;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.75);
-    color: #cbd5e1;
+    background: rgba(15, 23, 42, 0.85);
+    display: flex;
+    flex-direction: column;
   }
 
   /* Login */
   #login {
-    margin: auto;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #login form {
     background: rgba(20, 30, 50, 0.95);
     padding: 2rem 3rem;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
     width: 320px;
   }
   #login h2 {
     margin-bottom: 1.5rem;
     color: #a1caff;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
   }
-  #login label {
+  label {
     display: block;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
     font-size: 0.9rem;
   }
-  #login input {
+  input[type=text], input[type=password] {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 1.2rem;
     border: none;
     border-radius: 6px;
-    font-size: 1rem;
     background: #1e293b;
     color: #cbd5e1;
+    font-size: 1rem;
     outline-offset: 2px;
     outline-color: #3a87ad;
   }
-  #login input:focus {
+  input[type=text]:focus, input[type=password]:focus {
     outline-style: solid;
   }
-  #login button {
+  /* Contenedor del input password para posicionar el botón */
+  .password-container {
+    position: relative;
+  }
+  .toggle-password-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #a1caff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    user-select: none;
+  }
+  button[type=submit] {
     width: 100%;
     padding: 12px 0;
-    font-weight: 700;
-    font-size: 1rem;
     background: #3a87ad;
     border: none;
     border-radius: 6px;
     color: #e0f2ff;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
   }
-  #login button:hover {
+  button[type=submit]:hover {
     background: #2f6b8a;
   }
-  #login .error {
+  .error {
     color: #f87171;
     margin-bottom: 1rem;
     font-weight: 600;
+    text-align: center;
   }
 
-  /* Botón hamburguesa */
-  #menuToggle {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1001;
-    background: rgba(58,135,173,0.85);
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.3s ease;
-  }
-  #menuToggle:hover {
-    background: rgba(58,135,173,1);
+  /* App Layout */
+  #app {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
   }
 
   /* Menú lateral */
   #menu {
     width: 260px;
     background: rgba(20, 30, 50, 0.98);
-    padding-top: 15px;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
@@ -125,8 +126,8 @@
     transform: translateX(-100%);
   }
   #menu header {
-    padding: 0 25px 15px;
-    font-size: 1.4rem;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #a1caff;
     border-bottom: 1px solid rgba(255,255,255,0.12);
@@ -139,16 +140,15 @@
     flex-grow: 1;
     overflow-y: auto;
   }
-  #menuList > li {
+  #menuList li {
     border-bottom: 1px solid rgba(255,255,255,0.12);
-    margin: 0;
   }
-  #menuList > li:last-child {
+  #menuList li:last-child {
     border-bottom: none;
   }
   #menuList button {
     width: 100%;
-    padding: 12px 25px;
+    padding: 12px 2rem;
     background: transparent;
     border: none;
     color: #cbd5e1;
@@ -168,7 +168,7 @@
   /* Contenido */
   #content {
     flex-grow: 1;
-    padding: 25px 35px;
+    padding: 30px 40px;
     overflow-y: auto;
     color: #e2e8f0;
     user-select: text;
@@ -176,96 +176,122 @@
   #content h1 {
     margin-top: 0;
     font-weight: 700;
-    font-size: 2.2rem;
-    margin-bottom: 15px;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
   }
   #content p {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     line-height: 1.6;
     color: #cbd5e1;
   }
 
-  /* Scroll barras */
-  #menuList::-webkit-scrollbar,
-  #content::-webkit-scrollbar {
-    width: 7px;
+  /* Botón hamburguesa */
+  #menuToggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background: rgba(58,135,173,0.85);
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
   }
-  #menuList::-webkit-scrollbar-thumb,
-  #content::-webkit-scrollbar-thumb {
-    background: rgba(58,135,173,0.7);
-    border-radius: 4px;
+  #menuToggle:hover {
+    background: rgba(35, 95, 138, 0.95);
   }
 
-  /* Desktop - menú visible */
-  @media (min-width: 768px) {
-    #menuToggle {
-      display: none;
-    }
+  /* Responsive */
+  @media (max-width: 768px) {
     #menu {
-      transform: translateX(0);
-      position: relative;
-      box-shadow: none;
-    }
-  }
-
-  /* Mobile - menú oculto por defecto */
-  @media (max-width: 767px) {
-    #menuToggle {
-      display: block;
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      transform: translateX(-100%);
+      box-shadow: 4px 0 30px rgba(0,0,0,0.7);
     }
     #menu.collapsed {
       transform: translateX(-100%);
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
     }
-    #menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
+    #menu.expanded {
+      transform: translateX(0);
+    }
+    #menuToggle {
+      display: block;
     }
     #content {
-      padding: 20px 15px;
+      padding: 80px 20px 20px 20px;
     }
   }
 </style>
 </head>
 <body>
-
-  <!-- Botón para menú en móvil -->
-  <button id="menuToggle" aria-label="Abrir menú">&#9776;</button>
-
-  <!-- Contenedor general -->
-  <div id="container">
-
-    <!-- Login -->
-    <main id="login" aria-label="Formulario de inicio de sesión">
+<div id="container">
+  <!-- Login -->
+  <section id="login">
+    <form id="loginForm" novalidate>
       <h2>Iniciar Sesión</h2>
-      <div id="errorMsg" class="error" role="alert" aria-live="assertive"></div>
-      <form id="loginForm" autocomplete="off" novalidate>
-        <label for="username">Usuario</label>
-        <input id="username" type="text" name="username" required autocomplete="username" />
-        <label for="password">Contraseña</label>
-        <input id="password" type="password" name="password" required autocomplete="current-password" />
-        <button type="submit" aria-label="Iniciar sesión">Entrar</button>
-      </form>
-    </main>
+      <div class="error" id="loginError" role="alert" aria-live="assertive" style="display:none;"></div>
+      <label for="username">Usuario</label>
+      <input id="username" type="text" name="username" autocomplete="username" required />
+      
+      <label for="password">Contraseña</label>
+      <div class="password-container">
+        <input id="password" type="password" name="password" autocomplete="current-password" required />
+        <button type="button" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña" tabindex="-1">👁️</button>
+      </div>
 
-    <!-- Aplicación -->
-    <nav id="menu" class="collapsed" aria-label="Menú principal" role="navigation" aria-hidden="true">
+      <button type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <!-- App -->
+  <section id="app" style="display:none;">
+    <button id="menuToggle" aria-label="Mostrar/Ocultar menú">☰</button>
+    <nav id="menu" class="collapsed" aria-label="Menú principal">
       <header>Meteorología & Hidrología</header>
-      <ul id="menuList" role="menubar" aria-orientation="vertical" tabindex="0">
-        <li role="none"><button role="menuitem" class="active" tabindex="0">Tablero</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">GIS</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Mapa GIS</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Visor</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Fast Viewer</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Estaciones</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Monitoring</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Informe personalizado</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Informe rosa de los vientos</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Consecutive Rains</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Vistas</button></li>
-        <li role="none"><button role="menuitem" tabindex="-1">Sinópt
+      <ul id="menuList" role="menu">
+        <li><button role="menuitem" data-section="Tablero">Tablero</button></li>
+        <li><button role="menuitem" data-section="GIS">GIS</button></li>
+        <li><button role="menuitem" data-section="Mapa GIS">Mapa GIS</button></li>
+        <li><button role="menuitem" data-section="Visor">Visor</button></li>
+        <li><button role="menuitem" data-section="Fast Viewer">Fast Viewer</button></li>
+        <li><button role="menuitem" data-section="Estaciones">Estaciones</button></li>
+        <li><button role="menuitem" data-section="Monitoring">Monitoring</button></li>
+        <li><button role="menuitem" data-section="Informe personalizado">Informe personalizado</button></li>
+        <li><button role="menuitem" data-section="Informe rosa de los vientos">Informe rosa de los vientos</button></li>
+        <li><button role="menuitem" data-section="Consecutive Rains">Consecutive Rains</button></li>
+        <li><button role="menuitem" data-section="Vistas">Vistas</button></li>
+        <li><button role="menuitem" data-section="Sinópticos">Sinópticos</button></li>
+        <li><button role="menuitem" data-section="Custom Synoptics">Custom Synoptics</button></li>
+        <li><button role="menuitem" data-section="Supervisor">Supervisor</button></li>
+        <li><button role="menuitem" data-section="Estadísticas de red">Estadísticas de red</button></li>
+        <li><button role="menuitem" data-section="Registros">Registros</button></li>
+        <li><button role="menuitem" data-section="Módulos">Módulos</button></li>
+        <li><button role="menuitem" data-section="Túnel">Túnel</button></li>
+        <li><button role="menuitem" data-section="Validador">Validador</button></li>
+        <li><button role="menuitem" id="logoutBtn" style="border-top:1px solid rgba(255,255,255,0.12); margin-top: 10px; color:#f87171;">Cerrar sesión</button></li>
+      </ul>
+    </nav>
+    <main id="content" tabindex="0" aria-live="polite">
+      <h1>Bienvenido</h1>
+      <p>Seleccione una sección del menú para comenzar.</p>
+    </main>
+  </section>
+</div>
+
+<script>
+  const validUser = 'admin';
+  const validPass = '1234';
+
+  const loginSection = document.getElementById('login');
+  const appSection = document.getElementById('app');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const menu = document.getElementById('menu
