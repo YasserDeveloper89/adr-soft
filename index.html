@@ -38,18 +38,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+  }
+
+  /* Logo en login */
+  #login-logo {
+    margin-bottom: 1.5rem;
+    width: 180px;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.7));
   }
 
   #login {
     background: transparent; /* permite ver fondo general */
-    flex-direction: column;
   }
 
   form {
     background: rgba(33, 45, 65, 0.85);
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     width: 320px;
   }
 
@@ -58,22 +65,34 @@
     text-align: center;
     font-weight: 700;
     font-size: 1.8rem;
+    letter-spacing: 1.1px;
+    color: #cce1ff;
   }
 
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
+    color: #aabed8;
   }
 
   input[type="text"],
   input[type="password"] {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 7px;
     font-size: 1rem;
+    background: rgba(255 255 255 / 0.1);
+    color: #e6f0ff;
+    transition: background-color 0.25s ease;
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    background: rgba(255 255 255 / 0.2);
+    box-shadow: 0 0 5px #4a90e2;
   }
 
   button {
@@ -84,77 +103,88 @@
     color: white;
     font-size: 1.1rem;
     font-weight: 700;
-    border-radius: 5px;
+    border-radius: 7px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 8px rgba(74,144,226,0.7);
   }
-
   button:hover {
     background-color: #357ABD;
+    box-shadow: 0 6px 14px rgba(53,122,189,0.9);
   }
 
   /* App layout */
   #app {
     display: flex;
     height: 100vh;
+    width: 100vw;
   }
 
   nav {
     width: 260px;
     background: rgba(20, 35, 50, 0.95);
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #335d90;
     overflow-y: auto;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.6);
+    backdrop-filter: saturate(180%) blur(15px);
   }
 
   nav button.logout-btn {
     margin: 1rem auto 0;
     width: 90%;
     background: #b3383a;
+    box-shadow: 0 2px 10px rgba(179,56,58,0.7);
+    transition: background-color 0.3s ease;
   }
-
   nav button.logout-btn:hover {
     background: #8c292b;
+    box-shadow: 0 4px 16px rgba(140,41,43,0.9);
   }
 
   nav button.section-btn {
     background: transparent;
     border: none;
     color: #cbd7e6;
-    padding: 0.85rem 1.5rem;
+    padding: 0.45rem 1.5rem;
     text-align: left;
     font-weight: 600;
     font-size: 1rem;
     border-bottom: 1px solid #335d90;
     cursor: pointer;
-    transition: background-color 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    letter-spacing: 0.02em;
+    user-select: none;
   }
-
   nav button.section-btn:hover,
   nav button.section-btn.active {
-    background-color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.85);
     color: #fff;
+    box-shadow: inset 4px 0 0 0 #2b6cb0;
   }
 
   main.content {
     flex: 1;
-    padding: 1.5rem 2rem;
+    padding: 1.8rem 2.2rem;
     overflow-y: auto;
+    background: rgba(12, 21, 34, 0.85);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+    color: #e6f0ff;
   }
-
   main.content h1 {
     margin-top: 0;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #f0f0f0;
+    color: #cce1ff;
+    text-shadow: 0 0 6px rgba(74,144,226,0.9);
   }
-
   main.content p {
     font-size: 1.1rem;
     line-height: 1.5;
-    max-width: 800px;
+    max-width: 900px;
+    color: #d9e4f5cc;
   }
 
   /* Scrollbar personalizado para nav */
@@ -166,6 +196,7 @@
     border-radius: 4px;
   }
 
+  /* Responsive */
   @media (max-width: 768px) {
     #app {
       flex-direction: column;
@@ -177,6 +208,8 @@
       overflow-x: auto;
       border-right: none;
       border-bottom: 1px solid #335d90;
+      box-shadow: none;
+      backdrop-filter: saturate(180%) blur(10px);
     }
     nav button.section-btn {
       flex: 1 0 auto;
@@ -184,17 +217,21 @@
       border-right: 1px solid #335d90;
       text-align: center;
       padding: 1rem 0.5rem;
+      font-size: 0.9rem;
     }
     nav button.logout-btn {
       margin: 0 1rem;
       width: auto;
       align-self: center;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
     }
   }
 </style>
 </head>
 <body>
 <div id="login">
+  <img id="login-logo" src="adrlogo.png" alt="ADR Soft Logo" />
   <form id="loginForm" autocomplete="off">
     <h2>Iniciar Sesión</h2>
     <label for="username">Usuario</label>
@@ -208,88 +245,4 @@
 <div id="app" style="display:none;">
   <nav>
     <button class="section-btn active" data-section="Tablero">Tablero</button>
-    <button class="section-btn" data-section="GIS">GIS</button>
-    <button class="section-btn" data-section="Mapa GIS">Mapa GIS</button>
-    <button class="section-btn" data-section="Visor">Visor</button>
-    <button class="section-btn" data-section="Fast Viewer">Fast Viewer</button>
-    <button class="section-btn" data-section="Estaciones">Estaciones</button>
-    <button class="section-btn" data-section="Monitoring">Monitoring</button>
-    <button class="section-btn" data-section="Informe personalizado">Informe personalizado</button>
-    <button class="section-btn" data-section="Informe rosa de los vientos">Informe rosa de los vientos</button>
-    <button class="section-btn" data-section="Consecutive Rains">Consecutive Rains</button>
-    <button class="section-btn" data-section="Vistas">Vistas</button>
-    <button class="section-btn" data-section="Sinópticos">Sinópticos</button>
-    <button class="section-btn" data-section="Custom Synoptics">Custom Synoptics</button>
-    <button class="section-btn" data-section="Supervisor">Supervisor</button>
-    <button class="section-btn" data-section="Estadísticas de red">Estadísticas de red</button>
-    <button class="section-btn" data-section="Registros">Registros</button>
-    <button class="section-btn" data-section="Módulos">Módulos</button>
-    <button class="section-btn" data-section="Túnel">Túnel</button>
-    <button class="section-btn" data-section="Validador">Validador</button>
-    <button class="logout-btn">Cerrar Sesión</button>
-  </nav>
-  <main class="content">
-    <h1>Tablero</h1>
-    <p>Bienvenido al sistema ADR Soft. Seleccione una sección para visualizar su información.</p>
-  </main>
-</div>
-
-<script>
-  const loginDiv = document.getElementById('login');
-  const appDiv = document.getElementById('app');
-  const loginForm = document.getElementById('loginForm');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const navButtons = document.querySelectorAll('nav .section-btn');
-  const contentMain = document.querySelector('main.content');
-  const logoutBtn = document.querySelector('nav .logout-btn');
-
-  // Usuario y contraseña válidos - puedes cambiar aquí o validar desde backend en producción
-  const validUser = 'admin';
-  const validPass = '1234';
-
-  // Función para mostrar sección
-  function showSection(name) {
-    // Desactivar todos botones
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    // Activar seleccionado
-    const btn = [...navButtons].find(b => b.dataset.section === name);
-    if (btn) btn.classList.add('active');
-
-    // Cambiar contenido main
-    contentMain.innerHTML = `<h1>${name}</h1><p>Contenido para la sección "${name}" en desarrollo.</p>`;
-  }
-
-  // Login submit
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const user = usernameInput.value.trim();
-    const pass = passwordInput.value.trim();
-
-    if(user === validUser && pass === validPass) {
-      loginDiv.style.display = 'none';
-      appDiv.style.display = 'flex';
-      showSection('Tablero');
-      // Limpiar inputs
-      loginForm.reset();
-    } else {
-      alert('Usuario o contraseña incorrectos.');
-    }
-  });
-
-  // Manejo clic en secciones
-  navButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      showSection(btn.dataset.section);
-      // En móvil cierra menú si quieres (aquí menú fijo, pero podrías ocultar si fuera colapsable)
-    });
-  });
-
-  // Logout
-  logoutBtn.addEventListener('click', () => {
-    appDiv.style.display = 'none';
-    loginDiv.style.display = 'flex';
-  });
-</script>
-</body>
-</html>
+    <button class="
