@@ -3,257 +3,335 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Meteorología e Hidrología SaaS</title>
+<title>ADR Soft - Plataforma Meteorología e Hidrología</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
+  /* Reset y base */
   * {
     box-sizing: border-box;
   }
   body, html {
-    margin: 0; padding: 0; height: 100vh;
-    font-family: 'Inter', sans-serif;
-    background: url('Fondo.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #cbd5e1;
+    margin: 0; padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:
+      linear-gradient(to top, #1a293a 0%, #486d8c 50%, #758fa1 100%);
+    color: #f0f0f0;
+  }
+  /* Fondo montañas simuladas con CSS */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      linear-gradient(to top, #1c2a3a 20%, transparent 80%),
+      radial-gradient(circle at 30% 80%, #2c3e50 40%, transparent 60%),
+      radial-gradient(circle at 50% 85%, #3a5068 50%, transparent 70%),
+      radial-gradient(circle at 70% 80%, #29415d 45%, transparent 65%);
+    z-index: -1;
+    pointer-events: none;
   }
 
-  #container {
+  /* Login y app */
+  #login, #app {
     height: 100vh;
-    background: rgba(15, 23, 42, 0.85);
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Login */
-  #login {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  #login form {
-    background: rgba(20, 30, 50, 0.95);
-    padding: 2rem 3rem;
-    border-radius: 10px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+  #login {
+    background: rgba(15,23,42,0.85);
+    flex-direction: column;
+  }
+  form {
+    background: rgba(33,45,65,0.85);
+    padding: 2rem;
+    border-radius: 12px;
     width: 320px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
   }
-  #login h2 {
-    margin-bottom: 1.5rem;
-    color: #a1caff;
-    font-weight: 700;
-    font-size: 1.8rem;
-    text-align: center;
-  }
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  input[type=text], input[type=password] {
+  input {
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 1.2rem;
+    padding: 12px;
+    margin-bottom: 1rem;
     border: none;
     border-radius: 6px;
+    font-size: 1rem;
     background: #1e293b;
-    color: #cbd5e1;
-    font-size: 1rem;
-    outline-offset: 2px;
-    outline-color: #3a87ad;
+    color: #f0f0f0;
   }
-  input[type=text]:focus, input[type=password]:focus {
-    outline-style: solid;
+  input::placeholder {
+    color: #8fa4b9;
   }
-  .password-container {
-    position: relative;
-  }
-  .toggle-password-btn {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: #a1caff;
-    cursor: pointer;
-    font-size: 1.1rem;
-    user-select: none;
-  }
-  button[type=submit] {
+  button {
     width: 100%;
-    padding: 12px 0;
-    background: #3a87ad;
+    padding: 12px;
+    background: #2563eb;
     border: none;
     border-radius: 6px;
-    color: #e0f2ff;
+    color: white;
     font-weight: 700;
-    font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
   }
-  button[type=submit]:hover {
-    background: #2f6b8a;
+  button:hover {
+    background: #1e40af;
   }
-  .error {
-    color: #f87171;
+  #errorMsg {
+    color: #ef4444;
+    margin-top: -0.5rem;
     margin-bottom: 1rem;
     font-weight: 600;
     text-align: center;
+    display: none;
   }
 
-  /* App Layout */
+  /* App estructura */
   #app {
-    flex: 1;
+    display: none;
+    flex-direction: column;
+  }
+  #app-container {
     display: flex;
+    height: 100vh;
     overflow: hidden;
   }
 
   /* Menú lateral */
   #menu {
-    width: 260px;
-    background: rgba(20, 30, 50, 0.98);
+    background: rgba(15,23,42,0.95);
+    width: 280px;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
-    box-shadow: 3px 0 15px rgba(0,0,0,0.4);
-    z-index: 1000;
+    padding: 1rem;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.8);
   }
-  #menu.collapsed {
-    transform: translateX(-100%);
+  #menu h2 {
+    margin: 0 0 1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 0.5rem;
   }
-  #menu header {
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #a1caff;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    user-select: none;
-  }
-  #menuList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  #menuList li {
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-  }
-  #menuList li:last-child {
-    border-bottom: none;
-  }
-  #menuList button {
-    width: 100%;
-    padding: 10px 2rem;
+  #menu button {
     background: transparent;
     border: none;
     color: #cbd5e1;
-    font-weight: 600;
-    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+    margin: 3px 0;
     text-align: left;
+    font-size: 1rem;
+    border-left: 4px solid transparent;
     cursor: pointer;
-    transition: background 0.25s ease, color 0.25s ease;
-    line-height: 1.3;
+    transition: all 0.3s ease;
+    border-radius: 4px;
   }
-  #menuList button:hover,
-  #menuList button.active {
-    background: rgba(58, 135, 173, 0.9);
-    color: #e0f2ff;
+  #menu button:hover,
+  #menu button.active {
+    background: #2563eb;
+    color: white;
+    border-left-color: #3b82f6;
+  }
+  #logoutBtn {
+    margin-top: auto;
+    background: #dc2626 !important;
+    font-weight: 700;
   }
 
   /* Contenido */
   #content {
     flex-grow: 1;
-    padding: 30px 40px;
+    padding: 2rem 3rem;
     overflow-y: auto;
-    color: #e2e8f0;
-    user-select: text;
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
+    background: rgba(33, 45, 65, 0.9);
   }
   #content h1 {
     margin-top: 0;
-    font-weight: 700;
+    font-weight: 900;
     font-size: 2.5rem;
-    margin-bottom: 20px;
+    color: #3b82f6;
   }
   #content p {
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #cbd5e1;
   }
 
-  /* Botón hamburguesa */
-  #menuToggle {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1100;
-    background: rgba(58,135,173,0.85);
-    border: none;
-    color: white;
-    font-size: 1.7rem;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.3s ease;
-  }
-  #menuToggle:hover {
-    background: rgba(35, 95, 138, 0.95);
-  }
-
-  /* Responsive */
+  /* Responsive móvil - menú colapsable */
   @media (max-width: 768px) {
+    #app-container {
+      flex-direction: column;
+    }
     #menu {
-      position: fixed;
-      height: 100vh;
-      top: 0;
-      left: 0;
-      transform: translateX(-100%);
-      box-shadow: 4px 0 30px rgba(0,0,0,0.7);
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      padding: 0.5rem 1rem;
+      box-shadow: none;
     }
-    #menu.collapsed {
-      transform: translateX(-100%);
-    }
-    #menu.expanded {
-      transform: translateX(0);
+    #menu.show {
+      display: flex;
     }
     #menuToggle {
-      display: block;
+      background: #2563eb;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 0;
+      text-align: left;
+      font-size: 1.2rem;
+      user-select: none;
     }
     #content {
-      padding: 80px 20px 20px 20px;
-      margin-left: 0;
+      padding: 1rem 1.5rem;
     }
   }
 </style>
 </head>
 <body>
-<div id="container">
-  <!-- Login -->
-  <section id="login" aria-label="Formulario de inicio de sesión">
-    <form id="loginForm" novalidate>
-      <h2>Iniciar Sesión</h2>
-      <div class="error" id="loginError" role="alert" aria-live="assertive" style="display:none;"></div>
-      <label for="username">Usuario</label>
-      <input id="username" type="text" name="username" autocomplete="username" required />
-      
-      <label for="password">Contraseña</label>
-      <div class="password-container">
-        <input id="password" type="password" name="password" autocomplete="current-password" required />
-        <button type="button" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña" tabindex="-1">👁️</button>
-      </div>
 
-      <button type="submit">Entrar</button>
-    </form>
-  </section>
+<!-- LOGIN -->
+<div id="login">
+  <form id="loginForm">
+    <h2>Iniciar sesión</h2>
+    <input type="text" id="username" placeholder="Usuario" required autocomplete="username"/>
+    <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password" />
+    <p id="errorMsg"></p>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
 
-  <!-- App -->
-  <section id="app" aria-label="Aplicación principal" style="display:none;">
-    <button id="menuToggle" aria-label="Mostrar/Ocultar menú">☰</button>
-    <nav id="menu" class="collapsed" aria-label
+<!-- APP -->
+<div id="app">
+  <button id="menuToggle" style="display:none;">☰ Menú</button>
+  <div id="app-container">
+    <nav id="menu" aria-label="Menú principal">
+      <h2>ADR Soft</h2>
+      <button data-section="Tablero">Tablero</button>
+      <button data-section="GIS">GIS</button>
+      <button data-section="Mapa GIS">Mapa GIS</button>
+      <button data-section="Visor">Visor</button>
+      <button data-section="Fast Viewer">Fast Viewer</button>
+      <button data-section="Estaciones">Estaciones</button>
+      <button data-section="Monitoring">Monitoring</button>
+      <button data-section="Informe personalizado">Informe personalizado</button>
+      <button data-section="Informe rosa de los vientos">Informe rosa de los vientos</button>
+      <button data-section="Consecutive Rains">Consecutive Rains</button>
+      <button data-section="Vistas">Vistas</button>
+      <button data-section="Sinópticos">Sinópticos</button>
+      <button data-section="Custom Synoptics">Custom Synoptics</button>
+      <button data-section="Supervisor">Supervisor</button>
+      <button data-section="Estadísticas de red">Estadísticas de red</button>
+      <button data-section="Registros">Registros</button>
+      <button data-section="Módulos">Módulos</button>
+      <button data-section="Túnel">Túnel</button>
+      <button data-section="Validador">Validador</button>
+      <button id="logoutBtn">Cerrar sesión</button>
+    </nav>
+    <main id="content" tabindex="0">
+      <h1>Bienvenido a ADR Soft</h1>
+      <p>Seleccione una sección del menú para comenzar.</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  // Usuario y contraseña fijos
+  const validUser = 'admin';
+  const validPass = '1234';
+
+  const loginForm = document.getElementById('loginForm');
+  const loginDiv = document.getElementById('login');
+  const appDiv = document.getElementById('app');
+  const errorMsg = document.getElementById('errorMsg');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const menuButtons = document.querySelectorAll('#menu button[data-section]');
+  const content = document.getElementById('content');
+  const menu = document.getElementById('menu');
+  const menuToggle = document.getElementById('menuToggle');
+
+  // Función para mostrar sección
+  function showSection(name) {
+    // Simple ejemplo de contenido dinámico
+    content.innerHTML = `<h1>${name}</h1><p>Contenido de la sección <strong>${name}</strong>.</p>`;
+  }
+
+  // Login submit
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if(username === validUser && password === validPass) {
+      errorMsg.textContent = '';
+      loginDiv.style.display = 'none';
+      appDiv.style.display = 'flex';
+
+      // Mostrar menú toggle en móvil
+      if(window.innerWidth <= 768) {
+        menuToggle.style.display = 'block';
+      } else {
+        menuToggle.style.display = 'none';
+        menu.classList.add('show');
+      }
+
+      showSection('Tablero');
+      highlightButton('Tablero');
+    } else {
+      errorMsg.textContent = 'Usuario o contraseña incorrectos.';
+    }
+  });
+
+  // Logout
+  logoutBtn.addEventListener('click', () => {
+    appDiv.style.display = 'none';
+    loginDiv.style.display = 'flex';
+    loginForm.reset();
+    errorMsg.textContent = '';
+    // Ocultar menú toggle
+    menuToggle.style.display = 'none';
+  });
+
+  // Menu button click
+  menuButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.getAttribute('data-section');
+      showSection(section);
+      highlightButton(section);
+      // En móvil esconder menú
+      if(window.innerWidth <= 768) {
+        menu.classList.remove('show');
+      }
+      // Focus en contenido para accesibilidad
+      content.focus();
+    });
+  });
+
+  // Resaltar botón activo
+  function highlightButton(section) {
+    menuButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-section') === section);
+    });
+  }
+
+  // Toggle menú móvil
+  menuToggle.addEventListener('click', () => {
+    menu.classList.toggle('show');
+  });
+
+  // Ajuste menú al cambiar tamaño ventana
+  window.addEventListener('resize', () => {
+    if(window.innerWidth > 768) {
+      menu.classList.add('show');
+      menuToggle.style.display = 'none';
+    } else {
+      menu.classList.remove('show');
+      menuToggle.style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
