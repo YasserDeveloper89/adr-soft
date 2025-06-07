@@ -3,300 +3,192 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ADR Soft - Meteorología e Hidrología</title>
+<title>ADR Soft - Login funcional</title>
 <style>
-  /* Estilos generales y fondo */
-  * {
-    box-sizing: border-box;
-  }
-  html, body {
+  body {
     margin: 0; padding: 0;
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #f0f0f0;
-    background:
-      linear-gradient(to top, #1a293a 0%, #486d8c 50%, #758fa1 100%);
-    position: relative;
-    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e2a38, #4a6fa5);
+    color: #fff;
   }
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background:
-      linear-gradient(to top, #1c2a3a 20%, transparent 80%),
-      radial-gradient(circle at 30% 80%, #2c3e50 40%, transparent 60%),
-      radial-gradient(circle at 50% 85%, #3a5068 50%, transparent 70%),
-      radial-gradient(circle at 70% 80%, #29415d 45%, transparent 65%);
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  /* Login */
   #login {
     height: 100vh;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
     flex-direction: column;
-    padding-top: 3vh;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 50px;
   }
-
   #login-logo {
-    width: 180px;
-    margin-bottom: 2rem;
-    filter: drop-shadow(0 0 4px rgba(0,0,0,0.7));
+    width: 160px;
+    margin-bottom: 30px;
   }
-
   form {
-    background: rgba(33, 45, 65, 0.85);
-    padding: 2.5rem 2rem 2rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.5);
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.7);
     width: 320px;
-    position: relative;
   }
-
   form h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px;
     text-align: center;
-    font-weight: 700;
-    font-size: 1.8rem;
-    letter-spacing: 1.1px;
-    color: #cce1ff;
+    font-weight: bold;
   }
-
   label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #aabed8;
+    margin-bottom: 5px;
+    font-weight: bold;
   }
-
-  input[type="text"],
-  input[type="password"] {
+  input[type="text"], input[type="password"] {
     width: 100%;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 1.15rem;
+    padding: 8px 10px;
+    margin-bottom: 15px;
     border: none;
-    border-radius: 7px;
-    font-size: 1rem;
-    background: rgba(255 255 255 / 0.1);
-    color: #e6f0ff;
-    transition: background-color 0.25s ease;
+    border-radius: 5px;
+    font-size: 16px;
   }
-  input[type="text"]:focus,
-  input[type="password"]:focus {
-    outline: none;
-    background: rgba(255 255 255 / 0.2);
-    box-shadow: 0 0 5px #4a90e2;
-  }
-
-  /* Mostrar/ocultar contraseña */
   .password-container {
     position: relative;
   }
   .toggle-password {
     position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
+    right: 10px;
+    top: 9px;
     background: none;
     border: none;
     color: #4a90e2;
     cursor: pointer;
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: bold;
     user-select: none;
   }
   .toggle-password:focus {
     outline: none;
     text-decoration: underline;
   }
-
   button[type="submit"] {
     width: 100%;
-    background-color: #4a90e2;
+    padding: 10px;
+    background: #4a90e2;
     border: none;
-    padding: 0.75rem;
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border-radius: 7px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 3px 8px rgba(74,144,226,0.7);
+    color: white;
   }
   button[type="submit"]:hover {
-    background-color: #357ABD;
-    box-shadow: 0 6px 14px rgba(53,122,189,0.9);
+    background: #357ABD;
   }
-
-  /* Mensaje error */
   #errorMsg {
     color: #ff6b6b;
     text-align: center;
-    margin-bottom: 1rem;
-    font-weight: 600;
+    margin-bottom: 10px;
     display: none;
+    font-weight: bold;
   }
 
   /* App */
   #app {
     display: none;
     height: 100vh;
-    width: 100vw;
     display: flex;
+    background: #152935;
+    color: #cce1ff;
   }
-
   nav {
-    width: 260px;
-    background: rgba(20, 35, 50, 0.95);
-    padding: 0.5rem 0;
+    width: 240px;
+    background: rgba(20, 40, 60, 0.9);
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #335d90;
-    overflow-y: auto;
-    box-shadow: 3px 0 15px rgba(0,0,0,0.6);
-    backdrop-filter: saturate(180%) blur(15px);
+    padding: 15px 0;
   }
-
-  nav button.logout-btn {
-    margin: 1rem auto 0;
-    width: 90%;
-    background: #b3383a;
-    box-shadow: 0 2px 10px rgba(179,56,58,0.7);
-    transition: background-color 0.3s ease;
-  }
-  nav button.logout-btn:hover {
-    background: #8c292b;
-    box-shadow: 0 4px 16px rgba(140,41,43,0.9);
-  }
-
   nav button.section-btn {
     background: transparent;
     border: none;
-    color: #cbd7e6;
-    padding: 0.45rem 1.5rem;
+    color: #cce1ff;
+    padding: 15px 20px;
+    font-weight: bold;
+    font-size: 16px;
     text-align: left;
-    font-weight: 600;
-    font-size: 1rem;
-    border-bottom: 1px solid #335d90;
     cursor: pointer;
-    transition: background-color 0.25s ease, color 0.25s ease;
-    letter-spacing: 0.02em;
-    user-select: none;
-    margin-bottom: 2px;
+    border-left: 5px solid transparent;
+    transition: background 0.3s, border-left-color 0.3s;
   }
-  nav button.section-btn:hover,
+  nav button.section-btn:hover {
+    background: rgba(74, 144, 226, 0.3);
+  }
   nav button.section-btn.active {
-    background-color: rgba(74, 144, 226, 0.85);
-    color: #fff;
-    box-shadow: inset 4px 0 0 0 #2b6cb0;
+    background: rgba(74, 144, 226, 0.7);
+    border-left-color: #4a90e2;
   }
-
+  nav button.logout-btn {
+    margin-top: auto;
+    background: #b3383a;
+    padding: 15px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  nav button.logout-btn:hover {
+    background: #8c292b;
+  }
   main.content {
-    flex: 1;
-    padding: 1.8rem 2.2rem;
-    overflow-y: auto;
-    background: rgba(12, 21, 34, 0.85);
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
-    color: #e6f0ff;
+    flex-grow: 1;
+    padding: 25px;
   }
   main.content h1 {
     margin-top: 0;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #cce1ff;
-    text-shadow: 0 0 6px rgba(74,144,226,0.9);
+    font-size: 28px;
   }
   main.content p {
-    font-size: 1.1rem;
+    font-size: 18px;
     line-height: 1.5;
-    max-width: 900px;
-    color: #d9e4f5cc;
-  }
-
-  nav::-webkit-scrollbar {
-    width: 8px;
-  }
-  nav::-webkit-scrollbar-thumb {
-    background: #4a90e2;
-    border-radius: 4px;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    #app {
-      flex-direction: column;
-    }
-    nav {
-      width: 100%;
-      height: auto;
-      flex-direction: row;
-      overflow-x: auto;
-      border-right: none;
-      border-bottom: 1px solid #335d90;
-      box-shadow: none;
-      backdrop-filter: saturate(180%) blur(10px);
-    }
-    nav button.section-btn {
-      flex: 1 0 auto;
-      border-bottom: none;
-      border-right: 1px solid #335d90;
-      text-align: center;
-      padding: 1rem 0.5rem;
-      font-size: 0.9rem;
-    }
-    nav button.logout-btn {
-      margin: 0 1rem;
-      width: auto;
-      align-self: center;
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-    }
   }
 </style>
 </head>
 <body>
-  <div id="login">
-    <img id="login-logo" src="adrlogo.png" alt="ADR Soft Logo" />
-    <form id="loginForm" autocomplete="off" novalidate>
-      <h2>Iniciar Sesión</h2>
-      <div id="errorMsg"></div>
-      <label for="username">Usuario</label>
-      <input id="username" type="text" required autocomplete="username" />
-      <label for="password">Contraseña</label>
-      <div class="password-container">
-        <input id="password" type="password" required autocomplete="current-password" />
-        <button type="button" class="toggle-password" aria-label="Mostrar contraseña">Mostrar</button>
-      </div>
-      <button type="submit">Entrar</button>
-    </form>
-  </div>
 
-  <div id="app">
-    <nav>
-      <button class="section-btn active" data-section="Tablero">Tablero</button>
-      <button class="section-btn" data-section="GIS">GIS</button>
-      <button class="section-btn" data-section="Mapa GIS">Mapa GIS</button>
-      <button class="section-btn" data-section="Avisos">Avisos</button>
-      <button class="section-btn" data-section="Configuración">Configuración</button>
-      <button class="logout-btn">Cerrar Sesión</button>
-    </nav>
-    <main class="content" id="content">
-      <h1>Bienvenido a ADR Soft</h1>
-      <p>Selecciona una sección del menú para empezar.</p>
-    </main>
-  </div>
+<div id="login">
+  <img id="login-logo" src="adrlogo.png" alt="ADR Soft Logo" />
+  <form id="loginForm" autocomplete="off" novalidate>
+    <h2>Iniciar Sesión</h2>
+    <div id="errorMsg"></div>
+    <label for="username">Usuario</label>
+    <input id="username" type="text" required autocomplete="username" />
+    <label for="password">Contraseña</label>
+    <div class="password-container">
+      <input id="password" type="password" required autocomplete="current-password" />
+      <button type="button" class="toggle-password" aria-label="Mostrar contraseña">Mostrar</button>
+    </div>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+
+<div id="app">
+  <nav>
+    <button class="section-btn active" data-section="Tablero">Tablero</button>
+    <button class="section-btn" data-section="GIS">GIS</button>
+    <button class="section-btn" data-section="Mapa GIS">Mapa GIS</button>
+    <button class="section-btn" data-section="Avisos">Avisos</button>
+    <button class="section-btn" data-section="Configuración">Configuración</button>
+    <button class="logout-btn">Cerrar Sesión</button>
+  </nav>
+  <main class="content" id="content">
+    <h1>Bienvenido a ADR Soft</h1>
+    <p>Selecciona una sección del menú para empezar.</p>
+  </main>
+</div>
 
 <script>
-  // Mostrar/ocultar contraseña
+  // Toggle password visibility
   const togglePasswordBtn = document.querySelector('.toggle-password');
   const passwordInput = document.getElementById('password');
 
   togglePasswordBtn.addEventListener('click', () => {
-    if(passwordInput.type === 'password') {
+    if (passwordInput.type === 'password') {
       passwordInput.type = 'text';
       togglePasswordBtn.textContent = 'Ocultar';
       togglePasswordBtn.setAttribute('aria-label', 'Ocultar contraseña');
@@ -307,15 +199,13 @@
     }
   });
 
+  // Login form
   const loginForm = document.getElementById('loginForm');
   const errorMsg = document.getElementById('errorMsg');
   const loginDiv = document.getElementById('login');
   const appDiv = document.getElementById('app');
-  const sectionButtons = document.querySelectorAll('nav .section-btn');
-  const contentMain = document.getElementById('content');
-  const logoutBtn = document.querySelector('nav .logout-btn');
 
-  // Datos de usuario simulados para login
+  // Hardcoded user credentials
   const validUser = {
     username: 'admin',
     password: '1234'
@@ -323,4 +213,44 @@
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const username = loginForm.username
+    const username = loginForm.username.value.trim();
+    const password = loginForm.password.value;
+
+    if (username === validUser.username && password === validUser.password) {
+      errorMsg.style.display = 'none';
+      loginDiv.style.display = 'none';
+      appDiv.style.display = 'flex';
+    } else {
+      errorMsg.textContent = 'Usuario o contraseña incorrectos.';
+      errorMsg.style.display = 'block';
+    }
+  });
+
+  // Menu buttons functionality
+  const sectionButtons = document.querySelectorAll('nav .section-btn');
+  const contentMain = document.getElementById('content');
+
+  sectionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remove active from all
+      sectionButtons.forEach(btn => btn.classList.remove('active'));
+      // Add active to clicked
+      button.classList.add('active');
+
+      const section = button.getAttribute('data-section');
+      contentMain.innerHTML = `<h1>${section}</h1><p>Contenido de la sección <strong>${section}</strong> aquí.</p>`;
+    });
+  });
+
+  // Logout button
+  const logoutBtn = document.querySelector('nav .logout-btn');
+  logoutBtn.addEventListener('click', () => {
+    loginForm.reset();
+    errorMsg.style.display = 'none';
+    appDiv.style.display = 'none';
+    loginDiv.style.display = 'flex';
+  });
+</script>
+
+</body>
+</html>
