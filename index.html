@@ -6,7 +6,6 @@
 <title>ADR Soft - Login y Panel</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
   html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Roboto', sans-serif;
@@ -22,16 +21,13 @@
     background-position: center;
     background-repeat: no-repeat;
   }
-
   #app {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 6vh;
+    padding-top: 12vh; /* bajado más */
   }
-
-  /* LOGIN */
   #login {
     background: rgba(30,41,59,0.75);
     border-radius: 12px;
@@ -63,7 +59,6 @@
     color: #f0f0f0;
     font-size: 16px;
     box-sizing: border-box;
-    position: relative;
   }
   #login input::placeholder {
     color: #94A3B8;
@@ -100,20 +95,15 @@
   #login button:hover {
     background: #4338CA;
   }
-
-  /* PANEL APP */
   #appPanel {
     display: none;
     height: 100vh;
     overflow: hidden;
   }
-
   .container {
     display: flex;
     height: 100vh;
   }
-
-  /* MENU LATERAL */
   nav {
     width: 240px;
     background: rgba(30,41,59,0.95);
@@ -157,8 +147,6 @@
   nav ul li.logout button:hover {
     background: rgba(248,113,113,0.3);
   }
-
-  /* CONTENIDO */
   main.content {
     flex-grow: 1;
     background: rgba(15,23,42,0.85);
@@ -168,8 +156,6 @@
     font-size: 18px;
     line-height: 1.5;
   }
-
-  /* BOTON MENU MOVIL */
   #menuToggleBtn {
     position: fixed;
     top: 14px;
@@ -187,8 +173,6 @@
     width: 24px;
     height: 24px;
   }
-
-  /* RESPONSIVE */
   @media (max-width: 900px) {
     nav {
       position: fixed;
@@ -218,8 +202,6 @@
 <body>
 
 <div id="app">
-
-  <!-- LOGIN -->
   <section id="login" aria-label="Formulario de inicio de sesión">
     <img src="adrlogo.png" alt="Logo ADR" class="logo" />
     <h2>Login</h2>
@@ -234,8 +216,20 @@
     <button id="loginBtn" aria-label="Iniciar sesión">Iniciar sesión</button>
   </section>
 
-  <!-- APP -->
   <section id="appPanel" aria-label="Panel de la aplicación" style="display:none;">
     <button id="menuToggleBtn" aria-label="Abrir/Cerrar menú">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <path d="M3 6h18M3 12h18M3 18h18" stroke
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="#E0E7FF" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="container">
+      <nav id="menu" class="hidden" aria-label="Menú de navegación">
+        <ul>
+          <li><button class="menu-item" data-section="inicio">Inicio</button></li>
+          <li><button class="menu-item" data-section="perfil">Perfil</button></li>
+          <li><button class="menu-item" data-section="configuracion">Configuración</button></li>
+          <li class="logout"><button id="logoutBtn">Cerrar sesión</button></li>
+        </ul>
+      </nav>
+      <main class="content" id="contentArea">
+        <
