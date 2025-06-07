@@ -10,115 +10,125 @@
     box-sizing: border-box;
   }
   body, html {
-    margin: 0; height: 100%;
+    height: 100%;
+    margin: 0;
     font-family: 'Inter', sans-serif;
     background:
       linear-gradient(rgba(10,25,45,0.85), rgba(10,25,45,0.85)),
-      url('fondo.jpg') no-repeat center center fixed;
+      url('Fondo.jpg') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #e0e7ff;
   }
-  .login-container {
-    background: rgba(20,35,55,0.85);
+  #login-container {
+    background: rgba(20,35,55,0.9);
     padding: 3rem 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    width: 100%;
-    max-width: 380px;
-    color: #e0e7ff;
+    box-shadow: 0 0 20px rgba(65,105,225,0.7);
+    width: 320px;
+    max-width: 90vw;
     text-align: center;
   }
   h1 {
-    margin-bottom: 2rem;
-    font-weight: 600;
+    margin-bottom: 1.8rem;
+    font-weight: 700;
     letter-spacing: 1px;
   }
-  input[type="text"], input[type="password"] {
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+  input[type="text"],
+  input[type="password"] {
     width: 100%;
-    padding: 0.85rem 1rem;
-    margin-bottom: 1.5rem;
-    border-radius: 6px;
+    padding: 0.65rem 0.8rem;
+    margin-bottom: 1.2rem;
     border: none;
+    border-radius: 8px;
     font-size: 1rem;
-    background: rgba(255 255 255 / 0.1);
-    color: #e0e7ff;
+    outline: none;
+    background: #1e2a4f;
+    color: #cbd5e1;
     transition: background 0.3s ease;
   }
-  input[type="text"]:focus, input[type="password"]:focus {
-    background: rgba(255 255 255 / 0.25);
-    outline: none;
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    background: #3a4f94;
   }
   button {
     width: 100%;
-    padding: 0.85rem;
     background: #4169e1;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 0.85rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.25s ease;
+    box-shadow: 0 0 15px rgba(65,105,225,0.7);
   }
   button:hover {
-    background: #2741a9;
+    background: #2f52c0;
   }
-  .error-msg {
-    margin-top: 1rem;
+  #errorMsg {
     color: #f87171;
     font-weight: 600;
-    display: none;
-  }
-  @media (max-width: 400px) {
-    .login-container {
-      margin: 1rem;
-      padding: 2rem 1.5rem;
-    }
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    min-height: 1.3rem;
+    text-align: left;
   }
 </style>
 </head>
 <body>
-  <div class="login-container" role="main" aria-label="Formulario de inicio de sesión">
-    <h1>ADR Soft Login</h1>
-    <form id="loginForm" autocomplete="off" aria-describedby="error-msg">
-      <input type="text" id="username" name="username" placeholder="Usuario" required aria-required="true" />
-      <input type="password" id="password" name="password" placeholder="Contraseña" required aria-required="true" />
-      <button type="submit" aria-label="Iniciar sesión">Entrar</button>
+  <div id="login-container" role="main" aria-label="Formulario de inicio de sesión">
+    <h1>Iniciar sesión</h1>
+    <form id="loginForm" novalidate>
+      <label for="username">Usuario</label>
+      <input type="text" id="username" name="username" autocomplete="username" required aria-required="true" />
+      
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required aria-required="true" />
+      
+      <div id="errorMsg" aria-live="polite"></div>
+      
+      <button type="submit" aria-label="Enviar formulario de inicio de sesión">Entrar</button>
     </form>
-    <div id="error-msg" class="error-msg" role="alert"></div>
   </div>
 
 <script>
   (() => {
-    // Usuario y contraseña ocultos en closure, no accesibles en consola ni html
-    const validCredentials = { user: 'admin', pass: '1234' };
-
     const form = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('error-msg');
+    const errorMsg = document.getElementById('errorMsg');
 
-    form.addEventListener('submit', e => {
+    // Credenciales válidas
+    const validUser = 'admin';
+    const validPass = '1234';
+
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      errorMsg.style.display = 'none';
+      errorMsg.textContent = '';
 
-      const user = form.username.value.trim();
-      const pass = form.password.value;
+      const username = form.username.value.trim();
+      const password = form.password.value.trim();
 
-      // Validación simple cliente sin exponer credenciales
-      if(user === validCredentials.user && pass === validCredentials.pass) {
-        // Guarda sesión
+      if(!username || !password) {
+        errorMsg.textContent = 'Usuario y contraseña son obligatorios.';
+        return;
+      }
+
+      if(username === validUser && password === validPass) {
         sessionStorage.setItem('authenticated', 'true');
-        // Redirige sin parámetros visibles
         window.location.href = 'index.html';
       } else {
-        errorMsg.textContent = 'Usuario o contraseña incorrectos';
-        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Usuario o contraseña incorrectos.';
       }
     });
-
-    // Bloquea copiar/mostrar contraseña en consola (evita acceso casual)
-    Object.freeze(validCredentials);
   })();
 </script>
 </body>
