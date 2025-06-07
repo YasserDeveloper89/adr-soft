@@ -1,270 +1,305 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>App Polaris Web - Login y Menú</title>
-<style>
-  /* Reset básico */
-  * {
-    box-sizing: border-box;
-  }
-  body, html {
-    margin: 0; padding: 0;
-    height: 100%;
-    font-family: 'Inter', sans-serif, Arial, sans-serif;
-    background: linear-gradient(to top, #2c3e50 0%, #34495e 50%, #5d82a3 100%);
-    color: #ddd;
-    overflow-x: hidden;
-  }
-
-  /* Fondo montañas SVG via posición fija */
-  svg#mountain-bg {
-    position: fixed;
-    bottom: 0; left: 0;
-    width: 100%; height: 40vh;
-    pointer-events: none;
-    z-index: 0;
-    display: none; /* Oculto hasta login correcto */
-  }
-
-  /* Contenedor app */
-  #appContainer {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: row;
-    z-index: 1;
-    display: none; /* Oculto hasta login correcto */
-  }
-
-  /* Menú lateral */
-  #sidebar {
-    background: rgba(20, 30, 50, 0.9);
-    width: 280px;
-    min-width: 280px;
-    max-width: 280px;
-    height: 100vh;
-    overflow-y: auto;
-    transition: transform 0.3s ease;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.7);
-  }
-
-  #sidebar.hidden {
-    transform: translateX(-280px);
-  }
-
-  #sidebar header {
-    font-size: 1.4rem;
-    font-weight: 700;
-    padding: 1.5rem 1rem;
-    border-bottom: 1px solid #475c7b;
-    user-select: none;
-  }
-
-  #sidebar nav {
-    padding: 1rem;
-  }
-
-  #sidebar nav button {
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.3rem;
-    font-size: 1rem;
-    color: #ccc;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-
-  #sidebar nav button:hover,
-  #sidebar nav button.active {
-    background-color: #1e90ff;
-    color: #fff;
-  }
-
-  /* Contenido principal */
-  #content {
-    flex-grow: 1;
-    padding: 2rem;
-    overflow-y: auto;
-    min-height: 100vh;
-    background: rgba(30,40,60,0.7);
-  }
-
-  /* Botón para menú (móviles) */
-  #menuToggleBtn {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    background: #1e90ff;
-    border: none;
-    color: white;
-    padding: 0.6rem 1rem;
-    font-size: 1.2rem;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 10;
-    display: none;
-  }
-
-  /* Login pantalla completa */
-  #loginScreen {
-    position: fixed;
-    inset: 0;
-    background: rgba(20, 30, 50, 0.95);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-  }
-  #loginBox {
-    background: #222c44;
-    padding: 2rem 2.5rem;
-    border-radius: 12px;
-    width: 320px;
-    box-shadow: 0 0 20px rgba(30, 144, 255, 0.7);
-    color: #ccc;
-  }
-  #loginBox h2 {
-    margin-bottom: 1.5rem;
-    color: #1e90ff;
-    text-align: center;
-    font-weight: 700;
-  }
-  #loginBox label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.4rem;
-    user-select: none;
-  }
-  #loginBox input {
-    width: 100%;
-    padding: 0.5rem 0.7rem;
-    margin-bottom: 1.3rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    outline-offset: 2px;
-  }
-  #loginBox input:focus {
-    outline: 2px solid #1e90ff;
-  }
-  #loginBox button {
-    width: 100%;
-    padding: 0.8rem;
-    font-weight: 700;
-    background: #1e90ff;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.25s ease;
-  }
-  #loginBox button:hover {
-    background: #005ecb;
-  }
-  #loginError {
-    color: #ff6f6f;
-    margin-bottom: 1rem;
-    min-height: 1.2rem;
-    text-align: center;
-  }
-
-  /* Responsive: menú oculto y botón toggle visible */
-  @media (max-width: 900px) {
-    #sidebar {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>ADR-Soft - Login y Panel</title>
+  <style>
+    /* Fondo aplicado en todo el body */
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #eee;
+      background: url('fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+    }
+    /* Overlay para oscurecer fondo */
+    #overlay {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 0;
+    }
+
+    /* Login container */
+    #login-container {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 20, 20, 0.85);
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 15px #000;
+      z-index: 10;
+    }
+    #login-container h2 {
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+      color: #60a5fa;
+    }
+    #login-container input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    #login-container button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #3b82f6;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #login-container button:hover {
+      background-color: #2563eb;
+    }
+    #login-error {
+      color: #f87171;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* App container hidden initially */
+    #app-container {
+      display: none;
       height: 100vh;
-      z-index: 9;
-      transform: translateX(-280px);
+      display: flex;
+      overflow: hidden;
+      z-index: 5;
     }
-    #sidebar.visible {
-      transform: translateX(0);
+
+    /* Sidebar (menu) */
+    #sidebar {
+      background-color: rgba(15, 23, 42, 0.95);
+      width: 280px;
+      max-width: 280px;
+      height: 100vh;
+      padding-top: 1.5rem;
+      box-sizing: border-box;
+      color: #cbd5e1;
+      overflow-y: auto;
+      position: fixed;
+      left: 0;
+      top: 0;
+      transition: transform 0.3s ease;
+      z-index: 7;
     }
-    #menuToggleBtn {
-      display: block;
+
+    #sidebar.hidden {
+      transform: translateX(-100%);
     }
-    #content {
-      padding: 1.5rem 1rem;
+
+    #sidebar h3 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #60a5fa;
+      font-weight: 700;
     }
-  }
-</style>
+
+    #sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #sidebar ul li {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    #sidebar ul li:hover {
+      background-color: #334155;
+      border-left-color: #60a5fa;
+      color: white;
+    }
+
+    #sidebar ul li.active {
+      background-color: #1e40af;
+      border-left-color: #3b82f6;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* Toggle menu button for mobile */
+    #menu-toggle {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #2563eb;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 0.7rem;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 15;
+      display: none;
+    }
+
+    /* Main content */
+    #main-content {
+      margin-left: 280px;
+      padding: 2rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      box-sizing: border-box;
+    }
+
+    /* Responsive for small screens */
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        height: 100%;
+        z-index: 20;
+      }
+      #sidebar.hidden {
+        transform: translateX(-100%);
+      }
+      #menu-toggle {
+        display: block;
+      }
+      #main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Section headings */
+    #main-content h2 {
+      color: #60a5fa;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+  </style>
 </head>
 <body>
 
-<!-- Fondo SVG montañas -->
-<svg id="mountain-bg" viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-  <path fill="#aac7db" fill-opacity="0.4" d="M0 200 L150 100 L300 180 L450 120 L600 190 L750 130 L900 210 L1050 160 L1200 200 L1200 300 L0 300 Z"/>
-  <path fill="#7b9ec5" fill-opacity="0.6" d="M0 220 L180 150 L360 220 L540 160 L720 230 L900 170 L1080 240 L1200 200 L1200 300 L0 300 Z"/>
-  <path fill="#405d82" fill-opacity="0.8" d="M0 260 L200 190 L400 260 L600 200 L800 270 L1000 210 L1200 280 L1200 300 L0 300 Z"/>
-</svg>
+  <div id="overlay"></div>
 
-<!-- Login pantalla completa -->
-<div id="loginScreen" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-  <div id="loginBox">
-    <h2 id="loginTitle">Iniciar sesión Polaris Web</h2>
-    <form id="loginForm" autocomplete="off" novalidate>
-      <label for="username">Usuario</label>
-      <input type="text" id="username" name="username" autocomplete="username" required />
-      <label for="password">Contraseña</label>
-      <input type="password" id="password" name="password" autocomplete="current-password" required />
-      <div id="loginError" aria-live="assertive"></div>
-      <button type="submit">Ingresar</button>
-    </form>
+  <!-- Login -->
+  <div id="login-container">
+    <h2>Iniciar Sesión</h2>
+    <div id="login-error">Usuario o contraseña incorrectos</div>
+    <input type="text" id="username" placeholder="Usuario" autocomplete="username" />
+    <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" />
+    <button id="login-btn">Entrar</button>
   </div>
-</div>
 
-<!-- Contenedor app -->
-<div id="appContainer" aria-hidden="true">
-
-  <button id="menuToggleBtn" aria-label="Mostrar menú">☰</button>
-
-  <aside id="sidebar" role="navigation" aria-label="Menú principal">
-    <header>Polaris Web</header>
-    <nav>
-      <button data-section="tablero">Tablero</button>
-      <button data-section="gis">GIS</button>
-      <button data-section="mapa-gis">Mapa GIS</button>
-      <button data-section="visor">Visor</button>
-      <button data-section="fast-viewer">Fast Viewer</button>
-      <button data-section="estaciones">Estaciones</button>
-      <button data-section="monitoring">Monitoring</button>
-      <button data-section="informe-personalizado">Informe personalizado</button>
-      <button data-section="informe-rosa-vientos">Informe rosa de los vientos</button>
-      <button data-section="consecutive-rains">Consecutive Rains</button>
-      <button data-section="vistas">Vistas</button>
-      <button data-section="sinopticos">Sinópticos</button>
-      <button data-section="custom-synoptics">Custom Synoptics</button>
-      <button data-section="supervisor">Supervisor</button>
-      <button data-section="estadisticas-red">Estadísticas de red</button>
-      <button data-section="registros">Registros</button>
-      <button data-section="modulos">Módulos</button>
-      <button data-section="tunel">Túnel</button>
-      <button data-section="validador">Validador</button>
+  <!-- App -->
+  <button id="menu-toggle" aria-label="Toggle menú">&#9776;</button>
+  <div id="app-container">
+    <nav id="sidebar" class="hidden" aria-label="Menú principal">
+      <h3>ADR-Soft</h3>
+      <ul id="menu-list" role="menu" aria-orientation="vertical">
+        <li tabindex="0" role="menuitem" class="active">Tablero</li>
+        <li tabindex="0" role="menuitem">GIS</li>
+        <li tabindex="0" role="menuitem">Mapa GIS</li>
+        <li tabindex="0" role="menuitem">Visor</li>
+        <li tabindex="0" role="menuitem">Fast Viewer</li>
+        <li tabindex="0" role="menuitem">Estaciones</li>
+        <li tabindex="0" role="menuitem">Monitoring</li>
+        <li tabindex="0" role="menuitem">Informe personalizado</li>
+        <li tabindex="0" role="menuitem">Informe rosa de los vientos</li>
+        <li tabindex="0" role="menuitem">Consecutive Rains</li>
+        <li tabindex="0" role="menuitem">Vistas</li>
+        <li tabindex="0" role="menuitem">Sinópticos</li>
+        <li tabindex="0" role="menuitem">Custom Synoptics</li>
+        <li tabindex="0" role="menuitem">Supervisor</li>
+        <li tabindex="0" role="menuitem">Estadísticas de red</li>
+        <li tabindex="0" role="menuitem">Registros</li>
+        <li tabindex="0" role="menuitem">Módulos</li>
+        <li tabindex="0" role="menuitem">Túnel</li>
+        <li tabindex="0" role="menuitem">Validador</li>
+      </ul>
     </nav>
-  </aside>
 
-  <main id="content" tabindex="0" aria-live="polite" aria-atomic="true">
-    <h2>Bienvenido a Polaris Web</h2>
-    <p>Selecciona una sección del menú para comenzar.</p>
-  </main>
-
-</div>
+    <main id="main-content" tabindex="0" aria-live="polite">
+      <h2>Tablero</h2>
+      <p>Bienvenido al Tablero principal.</p>
+    </main>
+  </div>
 
 <script>
-  (function() {
-    const loginScreen = document.getElementById('loginScreen');
-    const loginForm = document.getElementById('loginForm');
-    const loginError = document.getElementById('loginError');
-    const appContainer = document.getElementById('appContainer');
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const navButtons = sidebar.querySelector
+  // Usuario y contraseña válidos
+  const validUser = 'admin';
+  const validPass = '1234';
+
+  const loginContainer = document.getElementById('login-container');
+  const loginBtn = document.getElementById('login-btn');
+  const loginError = document.getElementById('login-error');
+
+  const appContainer = document.getElementById('app-container');
+  const sidebar = document.getElementById('sidebar');
+  const menuToggle = document.getElementById('menu-toggle');
+  const menuList = document.getElementById('menu-list');
+  const mainContent = document.getElementById('main-content');
+
+  // Toggle menú lateral en móvil
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+  });
+
+  // Login
+  loginBtn.addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (username === validUser && password === validPass) {
+      loginError.style.display = 'none';
+      loginContainer.style.display = 'none';
+      appContainer.style.display = 'flex';
+      sidebar.classList.remove('hidden');
+      mainContent.focus();
+    } else {
+      loginError.style.display = 'block';
+    }
+  });
+
+  // Navegación menú: cambiar contenido y ocultar menú en móvil
+  menuList.addEventListener('click', (e) => {
+    if(e.target && e.target.nodeName === 'LI'){
+      // Quitar clase active de todos
+      [...menuList.children].forEach(li => li.classList.remove('active'));
+      // Poner active al seleccionado
+      e.target.classList.add('active');
+
+      // Cambiar contenido principal según sección (aquí ejemplo simple)
+      const section = e.target.textContent;
+      mainContent.innerHTML = `<h2>${section}</h2><p>Contenido de la sección <strong>${section}</strong>.</p>`;
+      mainContent.focus();
+
+      // Ocultar menú si es móvil
+      if(window.innerWidth <= 768){
+        sidebar.classList.add('hidden');
+      }
+    }
+  });
+
+  // Permitir Enter en inputs para login
+  [document.getElementById('username'), document.getElementById('password')].forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        loginBtn.click();
+      }
+    });
+  });
+</script>
+
+</body>
+  </html>
