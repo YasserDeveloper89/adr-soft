@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login - ADR Soft</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; height: 100%;
+    font-family: 'Inter', sans-serif;
+    background:
+      linear-gradient(rgba(10,25,45,0.85), rgba(10,25,45,0.85)),
+      url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-container {
+    background: rgba(20,35,55,0.85);
+    padding: 3rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    width: 100%;
+    max-width: 380px;
+    color: #e0e7ff;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    background: rgba(255 255 255 / 0.1);
+    color: #e0e7ff;
+    transition: background 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="password"]:focus {
+    background: rgba(255 255 255 / 0.25);
+    outline: none;
+  }
+  button {
+    width: 100%;
+    padding: 0.85rem;
+    background: #4169e1;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #2741a9;
+  }
+  .error-msg {
+    margin-top: 1rem;
+    color: #f87171;
+    font-weight: 600;
+    display: none;
+  }
+  @media (max-width: 400px) {
+    .login-container {
+      margin: 1rem;
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="login-container" role="main" aria-label="Formulario de inicio de sesión">
+    <h1>ADR Soft Login</h1>
+    <form id="loginForm" autocomplete="off" aria-describedby="error-msg">
+      <input type="text" id="username" name="username" placeholder="Usuario" required aria-required="true" />
+      <input type="password" id="password" name="password" placeholder="Contraseña" required aria-required="true" />
+      <button type="submit" aria-label="Iniciar sesión">Entrar</button>
+    </form>
+    <div id="error-msg" class="error-msg" role="alert"></div>
+  </div>
+
+<script>
+  (() => {
+    // Usuario y contraseña ocultos en closure, no accesibles en consola ni html
+    const validCredentials = { user: 'admin', pass: '1234' };
+
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('error-msg');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
+
+      const user = form.username.value.trim();
+      const pass = form.password.value;
+
+      // Validación simple cliente sin exponer credenciales
+      if(user === validCredentials.user && pass === validCredentials.pass) {
+        // Guarda sesión
+        sessionStorage.setItem('authenticated', 'true');
+        // Redirige sin parámetros visibles
+        window.location.href = 'index.html';
+      } else {
+        errorMsg.textContent = 'Usuario o contraseña incorrectos';
+        errorMsg.style.display = 'block';
+      }
+    });
+
+    // Bloquea copiar/mostrar contraseña en consola (evita acceso casual)
+    Object.freeze(validCredentials);
+  })();
+</script>
+</body>
+</html>
