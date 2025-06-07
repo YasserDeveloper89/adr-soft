@@ -30,18 +30,20 @@
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* subir login */
+    padding-top: 6vh; /* espacio superior */
   }
 
   /* Login */
   #login {
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(30, 41, 59, 0.75); /* más transparente */
     border-radius: 12px;
-    padding: 40px 32px 32px;
+    padding: 36px 32px 32px;
     width: 320px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     text-align: center;
     position: relative;
+    backdrop-filter: blur(10px);
   }
 
   #login img.logo {
@@ -154,8 +156,8 @@
     border: none;
     width: 100%;
     text-align: left;
-    padding: 14px 24px;
-    font-size: 16px;
+    padding: 10px 20px; /* menos padding */
+    font-size: 14px;    /* texto más compacto */
     color: #E0E7FF;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -223,6 +225,11 @@
     }
     main.content {
       padding: 72px 16px 16px;
+      font-size: 16px;
+    }
+    nav ul li button {
+      padding: 8px 16px;
+      font-size: 13px;
     }
   }
 </style>
@@ -248,111 +255,4 @@
   <section id="appPanel" style="display:none;">
     <button id="menuToggleBtn" aria-label="Toggle menu" title="Abrir/cerrar menú">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <path d="M3 6h18M3 12h18M3 18h18" stroke="#E0E7FF" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-    <div class="container">
-      <nav id="sideMenu" class="hidden" aria-label="Menú principal">
-        <ul>
-          <li><button class="menu-item" data-section="Tablero">Tablero</button></li>
-          <li><button class="menu-item" data-section="GIS">GIS</button></li>
-          <li><button class="menu-item" data-section="Mapa GIS">Mapa GIS</button></li>
-          <li><button class="menu-item" data-section="Visor">Visor</button></li>
-          <li><button class="menu-item" data-section="Fast Viewer">Fast Viewer</button></li>
-          <li><button class="menu-item" data-section="Estaciones">Estaciones</button></li>
-          <li><button class="menu-item" data-section="Monitoring">Monitoring</button></li>
-          <li><button class="menu-item" data-section="Informe personalizado">Informe personalizado</button></li>
-          <li><button class="menu-item" data-section="Informe rosa de los vientos">Informe rosa de los vientos</button></li>
-          <li><button class="menu-item" data-section="Consecutive Rains">Consecutive Rains</button></li>
-          <li><button class="menu-item" data-section="Vistas">Vistas</button></li>
-          <li><button class="menu-item" data-section="Sinópticos">Sinópticos</button></li>
-          <li><button class="menu-item" data-section="Custom Synoptics">Custom Synoptics</button></li>
-          <li><button class="menu-item" data-section="Supervisor">Supervisor</button></li>
-          <li><button class="menu-item" data-section="Estadísticas de red">Estadísticas de red</button></li>
-          <li><button class="menu-item" data-section="Registros">Registros</button></li>
-          <li><button class="menu-item" data-section="Módulos">Módulos</button></li>
-          <li><button class="menu-item" data-section="Túnel">Túnel</button></li>
-          <li><button class="menu-item" data-section="Validador">Validador</button></li>
-          <li class="logout"><button id="logoutBtn">Cerrar sesión</button></li>
-        </ul>
-      </nav>
-      <main id="mainContent" class="content" tabindex="0" aria-live="polite">
-        <h1>Bienvenido</h1>
-        <p>Selecciona una sección del menú para comenzar.</p>
-      </main>
-    </div>
-  </section>
-</div>
-
-<script>
-  // Mostrar/ocultar contraseña
-  const passwordInput = document.getElementById('password');
-  const togglePassword = document.getElementById('togglePassword');
-  togglePassword.addEventListener('click', () => {
-    const type = passwordInput.type === 'password' ? 'text' : 'password';
-    passwordInput.type = type;
-    togglePassword.setAttribute('aria-label', type === 'password' ? 'Mostrar contraseña' : 'Ocultar contraseña');
-  });
-
-  // Login
-  const loginBtn = document.getElementById('loginBtn');
-  const usernameInput = document.getElementById('username');
-  const loginSection = document.getElementById('login');
-  const appPanel = document.getElementById('appPanel');
-  const sideMenu = document.getElementById('sideMenu');
-  const menuToggleBtn = document.getElementById('menuToggleBtn');
-  const mainContent = document.getElementById('mainContent');
-  const logoutBtn = document.getElementById('logoutBtn');
-
-  loginBtn.addEventListener('click', () => {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (username === 'admin' && password === '1234') {
-      loginSection.style.display = 'none';
-      appPanel.style.display = 'flex';
-      sideMenu.classList.remove('hidden');
-      mainContent.innerHTML = `<h1>Bienvenido, ${username}</h1><p>Selecciona una sección del menú para comenzar.</p>`;
-      usernameInput.value = '';
-      passwordInput.value = '';
-    } else {
-      alert('Usuario o contraseña incorrectos.');
-    }
-  });
-
-  // Menú toggle botón
-  menuToggleBtn.addEventListener('click', () => {
-    sideMenu.classList.toggle('visible');
-  });
-
-  // Selección de sección menú: cambia contenido y cierra menú
-  document.querySelectorAll('.menu-item').forEach(button => {
-    button.addEventListener('click', () => {
-      const section = button.getAttribute('data-section');
-      mainContent.innerHTML = `
-        <h1>${section}</h1>
-        <p>Contenido y herramientas de la sección <strong>${section}</strong> aquí.</p>
-      `;
-      // Cerrar menú en móvil
-      sideMenu.classList.remove('visible');
-      // En desktop, si quieres ocultar menú al seleccionar, usar:
-      if(window.innerWidth > 900){
-        sideMenu.classList.add('hidden');
-      }
-      // Enfocar contenido
-      mainContent.focus();
-    });
-  });
-
-  // Cerrar sesión
-  logoutBtn.addEventListener('click', () => {
-    appPanel.style.display = 'none';
-    loginSection.style.display = 'block';
-    sideMenu.classList.add('hidden');
-  });
-
-  // En desktop, mostrar menú al pasar mouse sobre botón (opcional)
-  // (Puedes activar si quieres)
-</script>
-</body>
-</html>
+        <path d="M3 6h18M3 12h18M3 18
