@@ -14,7 +14,7 @@
     font-family: 'Inter', sans-serif;
     background:
       linear-gradient(rgba(10,25,45,0.9), rgba(10,25,45,0.9)),
-      url('fondo.jpg') no-repeat center center fixed;
+      url('Fondo.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #e0e7ff;
   }
@@ -22,12 +22,11 @@
     display: flex;
     height: 100vh;
   }
-  /* Menú lateral */
   nav {
     background: rgba(20,35,55,0.85);
     width: 280px;
     min-width: 280px;
-    padding: 1.5rem 1rem;
+    padding: 1rem 1rem;
     box-shadow: 2px 0 8px rgba(0,0,0,0.7);
     display: flex;
     flex-direction: column;
@@ -38,10 +37,11 @@
     transform: translateX(-300px);
   }
   nav h2 {
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1.2rem 0;
     font-weight: 700;
     letter-spacing: 1px;
     font-size: 1.5rem;
+    user-select: none;
   }
   nav ul {
     list-style: none;
@@ -51,7 +51,11 @@
     overflow-y: auto;
   }
   nav ul li {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  nav ul li:last-child {
+    border-bottom: none;
   }
   nav ul li button {
     width: 100%;
@@ -60,7 +64,7 @@
     color: #a8baf7;
     font-size: 1rem;
     text-align: left;
-    padding: 0.6rem 0.8rem;
+    padding: 0.65rem 0.8rem;
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.25s ease;
@@ -70,7 +74,6 @@
     background: #4169e1;
     color: white;
   }
-  /* Botón menú móvil */
   #menuToggle {
     display: none;
     position: fixed;
@@ -86,12 +89,13 @@
     cursor: pointer;
     box-shadow: 0 0 8px rgba(65,105,225,0.6);
   }
-  /* Contenido */
   main {
     flex-grow: 1;
     padding: 2rem 2rem 2rem 2.5rem;
     overflow-y: auto;
     background: rgba(10,25,45,0.75);
+    margin-left: 280px;
+    min-height: 100vh;
   }
   main h1 {
     margin-top: 0;
@@ -103,7 +107,6 @@
     line-height: 1.5;
     max-width: 900px;
   }
-  /* Responsive */
   @media (max-width: 768px) {
     nav {
       position: fixed;
@@ -111,6 +114,9 @@
       top: 0; left: 0;
       transform: translateX(-300px);
       box-shadow: 3px 0 12px rgba(0,0,0,0.9);
+      width: 280px;
+      min-width: 0;
+      padding: 1rem 0.5rem;
     }
     nav.visible {
       transform: translateX(0);
@@ -119,10 +125,10 @@
       display: block;
     }
     main {
-      padding: 3rem 1.5rem 1.5rem 1.5rem;
+      margin-left: 0;
+      padding: 4rem 1.5rem 1.5rem 1.5rem;
     }
   }
-  /* Scrollbar menú */
   nav ul::-webkit-scrollbar {
     width: 8px;
   }
@@ -171,7 +177,7 @@
 
 <script>
   (function(){
-    // Validar sesión
+    // Verificar autenticación
     if(sessionStorage.getItem('authenticated') !== 'true') {
       window.location.href = 'login.html';
       return;
@@ -183,59 +189,56 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const buttons = sidebar.querySelectorAll('ul li button');
 
-    // Muestra u oculta menú lateral en móvil
+    // Mostrar/ocultar menú en móvil
     menuToggle.addEventListener('click', () => {
       sidebar.classList.toggle('visible');
     });
 
-    // Contenido dummy para cada sección (puedes ampliar aquí la información)
+    // Contenido para cada sección
     const sectionsContent = {
       'tablero': '<h1>Tablero</h1><p>Panel principal con resumen y estadísticas.</p>',
       'gis': '<h1>GIS</h1><p>Información y herramientas GIS avanzadas.</p>',
       'mapa-gis': '<h1>Mapa GIS</h1><p>Visualización geográfica interactiva.</p>',
-      'visor': '<h1>Visor</h1><p>Visor de datos meteorológicos en tiempo real.</p>',
-      'fast-viewer': '<h1>Fast Viewer</h1><p>Visualización rápida y eficiente.</p>',
-      'estaciones': '<h1>Estaciones</h1><p>Estado y datos de estaciones meteorológicas.</p>',
-      'monitoring': '<h1>Monitoring</h1><p>Monitoreo en tiempo real de variables climáticas.</p>',
-      'informe-personalizado': '<h1>Informe personalizado</h1><p>Generación de reportes a medida.</p>',
-      'informe-rosa-vientos': '<h1>Informe rosa de los vientos</h1><p>Análisis de direcciones y velocidades del viento.</p>',
-      'consecutive-rains': '<h1>Consecutive Rains</h1><p>Historial y análisis de lluvias consecutivas.</p>',
-      'vistas': '<h1>Vistas</h1><p>Diferentes vistas y perspectivas de datos.</p>',
-      'sinopticos': '<h1>Sinópticos</h1><p>Mapas sinópticos y análisis atmosféricos.</p>',
-      'custom-synoptics': '<h1>Custom Synoptics</h1><p>Mapas personalizados para análisis avanzados.</p>',
+      'visor': '<h1>Visor</h1><p>Herramientas de visualización detallada.</p>',
+      'fast-viewer': '<h1>Fast Viewer</h1><p>Visor rápido para análisis en tiempo real.</p>',
+      'estaciones': '<h1>Estaciones</h1><p>Gestión de estaciones meteorológicas y sensores.</p>',
+      'monitoring': '<h1>Monitoring</h1><p>Monitorización en vivo de datos.</p>',
+      'informe-personalizado': '<h1>Informe personalizado</h1><p>Generación de informes a medida.</p>',
+      'informe-rosa-vientos': '<h1>Informe rosa de los vientos</h1><p>Análisis del patrón de vientos.</p>',
+      'consecutive-rains': '<h1>Consecutive Rains</h1><p>Registro de lluvias consecutivas.</p>',
+      'vistas': '<h1>Vistas</h1><p>Perspectivas personalizadas de datos.</p>',
+      'sinopticos': '<h1>Sinópticos</h1><p>Mapas sinópticos climáticos.</p>',
+      'custom-synoptics': '<h1>Custom Synoptics</h1><p>Sinópticos personalizados.</p>',
       'supervisor': '<h1>Supervisor</h1><p>Panel de supervisión y alertas.</p>',
-      'estadisticas-red': '<h1>Estadísticas de red</h1><p>Datos y métricas de red de estaciones.</p>',
-      'registros': '<h1>Registros</h1><p>Logs y registros de eventos.</p>',
-      'modulos': '<h1>Módulos</h1><p>Gestión y configuración de módulos.</p>',
-      'tunel': '<h1>Túnel</h1><p>Visualización y control del túnel.</p>',
+      'estadisticas-red': '<h1>Estadísticas de red</h1><p>Análisis de red y rendimiento.</p>',
+      'registros': '<h1>Registros</h1><p>Logs y auditorías del sistema.</p>',
+      'modulos': '<h1>Módulos</h1><p>Gestión de módulos y extensiones.</p>',
+      'tunel': '<h1>Túnel</h1><p>Datos y análisis específicos del túnel.</p>',
       'validador': '<h1>Validador</h1><p>Herramientas de validación de datos.</p>'
     };
 
-    // Maneja clic en menú
+    // Manejo del clic en el menú
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Actualiza contenido
-        const section = btn.getAttribute('data-section');
-        content.innerHTML = sectionsContent[section] || '<h1>Sin contenido</h1>';
-
-        // Marca botón activo
         buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        // Oculta menú en móvil
+        const section = btn.getAttribute('data-section');
+        content.innerHTML = sectionsContent[section] || '<h1>Sección no encontrada</h1>';
+        // Ocultar menú en móvil al seleccionar sección
         if(window.innerWidth <= 768) {
           sidebar.classList.remove('visible');
         }
-        content.focus();
       });
     });
 
-    // Logout limpia sesión y regresa a login
+    // Logout
     logoutBtn.addEventListener('click', () => {
       sessionStorage.removeItem('authenticated');
       window.location.href = 'login.html';
     });
 
+    // Mostrar sección por defecto (Tablero)
+    buttons[0].click();
   })();
 </script>
 </body>
