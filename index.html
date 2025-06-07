@@ -1,183 +1,218 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADR-SOFT App</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>ADR-SOFT</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', sans-serif;
-    }
-    body {
-      background: url('Fondo.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      min-height: 100vh;
-    }
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.6);
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: -1;
-    }
-    .login-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 60px;
-      min-height: 100vh;
-    }
-    .login-box {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      width: 300px;
-    }
-    .login-box h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .login-box input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 5px;
-    }
-    .login-box button {
-      width: 100%;
-      padding: 10px;
-      background-color: #005eff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .toggle-password {
-      position: relative;
-      float: right;
-      margin-top: -35px;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-    .app-container {
-      display: none;
-      display: flex;
-      min-height: 100vh;
-    }
-    .sidebar {
-      width: 250px;
-      background-color: rgba(0,0,0,0.7);
-      padding-top: 20px;
-    }
-    .sidebar ul {
-      list-style: none;
-    }
-    .sidebar li {
-      padding: 12px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      cursor: pointer;
-    }
-    .sidebar li:hover {
-      background-color: rgba(255,255,255,0.1);
-    }
-    .sidebar li.logout {
-      background-color: rgba(255, 0, 0, 0.3);
-      color: #ffaaaa;
-    }
-    .sidebar li.logout:hover {
-      background-color: rgba(255, 0, 0, 0.5);
-    }
-    .content {
-      flex-grow: 1;
-      padding: 20px;
-      margin-top: 20px;
-    }
+    }body {
+  background-image: url('Fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+}
+
+#menuToggle {
+  font-size: 1.5rem;
+  background: none;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+nav {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: left 0.3s ease;
+  padding-top: 5rem;
+  z-index: 1000;
+}
+
+nav.open {
+  left: 0;
+}
+
+nav ul {
+  list-style: none;
+}
+
+nav ul li {
+  border-bottom: 1px solid #444;
+}
+
+nav ul li a {
+  display: block;
+  padding: 1rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+nav ul li.logout a {
+  color: #ff4c4c;
+  font-weight: bold;
+}
+
+main {
+  margin-top: 4rem;
+  padding: 2rem;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+#content {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-width: 900px;
+  margin: auto;
+  min-height: 300px;
+}
+
+.hidden {
+  display: none;
+}
+
+#loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+#loginBox {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+  max-width: 400px;
+  width: 100%;
+}
+
+#loginBox input {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 5px;
+}
+
+#loginBox button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+#adrLogo {
+  width: 120px;
+  margin-bottom: 1rem;
+}
+
+.toggle-password {
+  position: relative;
+  float: right;
+  margin-top: -2rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
   </style>
 </head>
-<body>
-  <div class="overlay"></div>
-  <div class="login-container" id="loginSection">
-    <img src="adrlogo.png" alt="Logo" style="width: 120px; margin-bottom: 20px;">
-    <div class="login-box">
-      <h2>Iniciar sesión</h2>
+<body>  <div id="loginContainer">
+    <img src="adrlogo.png" id="adrLogo" alt="ADR Logo">
+    <div id="loginBox">
       <input type="text" id="username" placeholder="Usuario">
       <input type="password" id="password" placeholder="Contraseña">
-      <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+      <span class="toggle-password" onclick="togglePassword()">👁️</span>
       <button onclick="login()">Entrar</button>
     </div>
-  </div>
-  <div class="app-container" id="appSection">
-    <div class="sidebar" id="sidebar">
-      <ul>
-        <li onclick="selectSection('Tablero')">Tablero</li>
-        <li onclick="selectSection('GIS')">GIS</li>
-        <li onclick="selectSection('Mapa GIS')">Mapa GIS</li>
-        <li onclick="selectSection('Visor')">Visor</li>
-        <li onclick="selectSection('Fast Viewer')">Fast Viewer</li>
-        <li onclick="selectSection('Estaciones')">Estaciones</li>
-        <li onclick="selectSection('Monitoring')">Monitoring</li>
-        <li onclick="selectSection('Informe personalizado')">Informe personalizado</li>
-        <li onclick="selectSection('Informe rosa de los vientos')">Informe rosa de los vientos</li>
-        <li onclick="selectSection('Consecutive Rains')">Consecutive Rains</li>
-        <li onclick="selectSection('Vistas')">Vistas</li>
-        <li onclick="selectSection('Sinópticos')">Sinópticos</li>
-        <li onclick="selectSection('Custom Synoptics')">Custom Synoptics</li>
-        <li onclick="selectSection('Supervisor')">Supervisor</li>
-        <li onclick="selectSection('Estadísticas de red')">Estadísticas de red</li>
-        <li onclick="selectSection('Registros')">Registros</li>
-        <li onclick="selectSection('Módulos')">Módulos</li>
-        <li onclick="selectSection('Túnel')">Túnel</li>
-        <li onclick="selectSection('Validador')">Validador</li>
-        <li class="logout" onclick="logout()">Cerrar sesión</li>
-      </ul>
+  </div>  <header id="appHeader" class="hidden">
+    <button id="menuToggle" onclick="toggleMenu()">☰</button>
+    <h1>ADR-SOFT</h1>
+  </header>  <nav id="sidebar">
+    <ul>
+      <li><a href="#" onclick="loadSection('Tablero')">Tablero</a></li>
+      <li><a href="#" onclick="loadSection('GIS')">GIS</a></li>
+      <li><a href="#" onclick="loadSection('Mapa GIS')">Mapa GIS</a></li>
+      <li><a href="#" onclick="loadSection('Visor')">Visor</a></li>
+      <li><a href="#" onclick="loadSection('Fast Viewer')">Fast Viewer</a></li>
+      <li><a href="#" onclick="loadSection('Estaciones')">Estaciones</a></li>
+      <li><a href="#" onclick="loadSection('Monitoring')">Monitoring</a></li>
+      <li><a href="#" onclick="loadSection('Informe personalizado')">Informe personalizado</a></li>
+      <li><a href="#" onclick="loadSection('Informe rosa de los vientos')">Informe rosa de los vientos</a></li>
+      <li><a href="#" onclick="loadSection('Consecutive Rains')">Consecutive Rains</a></li>
+      <li><a href="#" onclick="loadSection('Vistas')">Vistas</a></li>
+      <li><a href="#" onclick="loadSection('Sinópticos')">Sinópticos</a></li>
+      <li><a href="#" onclick="loadSection('Custom Synoptics')">Custom Synoptics</a></li>
+      <li><a href="#" onclick="loadSection('Supervisor')">Supervisor</a></li>
+      <li><a href="#" onclick="loadSection('Estadísticas de red')">Estadísticas de red</a></li>
+      <li><a href="#" onclick="loadSection('Registros')">Registros</a></li>
+      <li><a href="#" onclick="loadSection('Módulos')">Módulos</a></li>
+      <li><a href="#" onclick="loadSection('Túnel')">Túnel</a></li>
+      <li><a href="#" onclick="loadSection('Validador')">Validador</a></li>
+      <li class="logout"><a href="#" onclick="logout()">Cerrar sesión</a></li>
+    </ul>
+  </nav>  <main id="appMain" class="hidden">
+    <div id="content">
+      <h2>Bienvenido a ADR-SOFT</h2>
+      <p>Seleccione una sección del menú para comenzar.</p>
     </div>
-    <div class="content" id="mainContent">
-      <h2>Bienvenido</h2>
-      <p>Selecciona una sección del menú para comenzar.</p>
-    </div>
-  </div>
-
-  <script>
+  </main>  <script>
     function login() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (u === 'admin' && p === '1234') {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('appSection').style.display = 'flex';
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user === 'admin' && pass === '1234') {
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('appHeader').classList.remove('hidden');
+        document.getElementById('appMain').classList.remove('hidden');
       } else {
         alert('Credenciales incorrectas');
       }
     }
 
     function logout() {
-      document.getElementById('loginSection').style.display = 'flex';
-      document.getElementById('appSection').style.display = 'none';
+      location.reload();
     }
 
-    function selectSection(name) {
-      document.getElementById('mainContent').innerHTML = `<h2>${name}</h2><p>Contenido de ${name}.</p>`;
-      if (window.innerWidth < 768) {
-        document.getElementById('sidebar').style.display = 'none';
-        setTimeout(() => {
-          document.getElementById('sidebar').style.display = 'block';
-        }, 300);
-      }
+    function loadSection(name) {
+      document.getElementById('content').innerHTML = `<h2>${name}</h2><p>Contenido de la sección ${name}.</p>`;
+      document.getElementById('sidebar').classList.remove('open');
+    }
+
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('open');
     }
 
     function togglePassword() {
       const pwd = document.getElementById('password');
       pwd.type = pwd.type === 'password' ? 'text' : 'password';
     }
-  </script>
-</body>
-  </html>
-  
+  </script></body>
+    </html>
