@@ -7,58 +7,51 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-  body, html {
+  html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(180deg, #1f2937 0%, #374151 100%);
     color: #f0f0f0;
     overflow-x: hidden;
   }
-
-  /* Fondo */
   body {
     background-image:
-      linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.8)),
+      linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
       url('Fondo.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
-  /* Contenedor principal */
   #app {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* subir login */
-    padding-top: 6vh; /* espacio superior */
+    align-items: flex-start;
+    padding-top: 6vh;
   }
 
-  /* Login */
+  /* LOGIN */
   #login {
-    background: rgba(30, 41, 59, 0.75); /* más transparente */
+    background: rgba(30,41,59,0.75);
     border-radius: 12px;
     padding: 36px 32px 32px;
     width: 320px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     text-align: center;
-    position: relative;
     backdrop-filter: blur(10px);
   }
-
   #login img.logo {
     width: 120px;
     margin-bottom: 24px;
     user-select: none;
   }
-
   #login h2 {
     margin-bottom: 24px;
     font-weight: 700;
     font-size: 24px;
     color: #E0E7FF;
   }
-
   #login input[type="text"],
   #login input[type="password"] {
     width: 100%;
@@ -75,12 +68,9 @@
   #login input::placeholder {
     color: #94A3B8;
   }
-
   .password-container {
     position: relative;
   }
-
-  /* Ojo - ícono para mostrar/ocultar */
   .toggle-password {
     position: absolute;
     top: 50%;
@@ -95,7 +85,6 @@
   .toggle-password:hover {
     fill: #A5B4FC;
   }
-
   #login button {
     width: 100%;
     padding: 14px;
@@ -112,23 +101,22 @@
     background: #4338CA;
   }
 
-  /* Panel de aplicación */
+  /* PANEL APP */
   #appPanel {
     display: none;
     height: 100vh;
     overflow: hidden;
   }
 
-  /* Contenedor con menú y contenido */
   .container {
     display: flex;
     height: 100vh;
   }
 
-  /* Menú desplegable lateral */
+  /* MENU LATERAL */
   nav {
-    width: 260px;
-    background: rgba(30, 41, 59, 0.95);
+    width: 240px;
+    background: rgba(30,41,59,0.95);
     color: #E0E7FF;
     box-shadow: 2px 0 8px rgba(0,0,0,0.4);
     overflow-y: auto;
@@ -136,51 +124,44 @@
     position: relative;
     z-index: 10;
   }
-
   nav.hidden {
     transform: translateX(-100%);
   }
-
   nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-
   nav ul li {
     border-bottom: 1px solid #334155;
   }
-
   nav ul li button {
     background: transparent;
     border: none;
     width: 100%;
     text-align: left;
-    padding: 10px 20px; /* menos padding */
-    font-size: 14px;    /* texto más compacto */
+    padding: 8px 16px;
+    font-size: 14px;
     color: #E0E7FF;
     cursor: pointer;
     transition: background-color 0.2s ease;
   }
-
   nav ul li button:hover {
-    background: rgba(79, 70, 229, 0.2);
+    background: rgba(79,70,229,0.2);
   }
-
-  /* Cerrar sesión destacado */
   nav ul li.logout button {
     color: #F87171;
     font-weight: 700;
-    background: rgba(248, 113, 113, 0.15);
+    background: rgba(248,113,113,0.15);
   }
   nav ul li.logout button:hover {
-    background: rgba(248, 113, 113, 0.3);
+    background: rgba(248,113,113,0.3);
   }
 
-  /* Contenido principal */
+  /* CONTENIDO */
   main.content {
     flex-grow: 1;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(15,23,42,0.85);
     padding: 24px;
     overflow-y: auto;
     color: #F0F4FF;
@@ -188,18 +169,18 @@
     line-height: 1.5;
   }
 
-  /* Botón para abrir/cerrar menú */
+  /* BOTON MENU MOVIL */
   #menuToggleBtn {
     position: fixed;
     top: 14px;
     left: 14px;
-    background: rgba(79, 70, 229, 0.9);
+    background: rgba(79,70,229,0.9);
     border: none;
     border-radius: 8px;
     padding: 10px;
     cursor: pointer;
     z-index: 100;
-    display: none; /* se mostrará en móvil */
+    display: none;
   }
   #menuToggleBtn svg {
     fill: #E0E7FF;
@@ -207,7 +188,7 @@
     height: 24px;
   }
 
-  /* Responsive */
+  /* RESPONSIVE */
   @media (max-width: 900px) {
     nav {
       position: fixed;
@@ -235,24 +216,26 @@
 </style>
 </head>
 <body>
+
 <div id="app">
-  <!-- Login -->
-  <section id="login">
+
+  <!-- LOGIN -->
+  <section id="login" aria-label="Formulario de inicio de sesión">
     <img src="adrlogo.png" alt="Logo ADR" class="logo" />
     <h2>Login</h2>
-    <input id="username" type="text" placeholder="Usuario" autocomplete="username" />
+    <input id="username" type="text" placeholder="Usuario" autocomplete="username" aria-label="Usuario" />
     <div class="password-container">
-      <input id="password" type="password" placeholder="Contraseña" autocomplete="current-password" />
-      <svg id="togglePassword" class="toggle-password" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Mostrar contraseña" role="img">
+      <input id="password" type="password" placeholder="Contraseña" autocomplete="current-password" aria-label="Contraseña" />
+      <svg id="togglePassword" class="toggle-password" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="Mostrar contraseña" tabindex="0">
         <path d="M12 4.5C7.305 4.5 3.235 7.377 1.5 12c1.735 4.623 5.805 7.5 10.5 7.5s8.765-2.877 10.5-7.5c-1.735-4.623-5.805-7.5-10.5-7.5zm0 13a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
         <circle cx="12" cy="12" r="2.5"/>
       </svg>
     </div>
-    <button id="loginBtn">Iniciar sesión</button>
+    <button id="loginBtn" aria-label="Iniciar sesión">Iniciar sesión</button>
   </section>
 
-  <!-- Panel principal -->
-  <section id="appPanel" style="display:none;">
-    <button id="menuToggleBtn" aria-label="Toggle menu" title="Abrir/cerrar menú">
+  <!-- APP -->
+  <section id="appPanel" aria-label="Panel de la aplicación" style="display:none;">
+    <button id="menuToggleBtn" aria-label="Abrir/Cerrar menú">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <path d="M3 6h18M3 12h18M3 18
+        <path d="M3 6h18M3 12h18M3 18h18" stroke
