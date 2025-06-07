@@ -1,305 +1,242 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>ADR-Soft - Login y Panel</title>
-  <style>
-    /* Fondo aplicado en todo el body */
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #eee;
-      background: url('fondo.jpg') no-repeat center center fixed;
-      background-size: cover;
-      overflow-x: hidden;
-    }
-    /* Overlay para oscurecer fondo */
-    #overlay {
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ADR Soft - Panel Principal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; height: 100%;
+    font-family: 'Inter', sans-serif;
+    background:
+      linear-gradient(rgba(10,25,45,0.9), rgba(10,25,45,0.9)),
+      url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #e0e7ff;
+  }
+  #app {
+    display: flex;
+    height: 100vh;
+  }
+  /* Menú lateral */
+  nav {
+    background: rgba(20,35,55,0.85);
+    width: 280px;
+    min-width: 280px;
+    padding: 1.5rem 1rem;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    z-index: 10;
+  }
+  nav.hidden {
+    transform: translateX(-300px);
+  }
+  nav h2 {
+    margin: 0 0 1.5rem 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+  }
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  nav ul li {
+    margin-bottom: 0.8rem;
+  }
+  nav ul li button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #a8baf7;
+    font-size: 1rem;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  nav ul li button:hover,
+  nav ul li button.active {
+    background: #4169e1;
+    color: white;
+  }
+  /* Botón menú móvil */
+  #menuToggle {
+    display: none;
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 20;
+    background: #4169e1;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 10px 14px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(65,105,225,0.6);
+  }
+  /* Contenido */
+  main {
+    flex-grow: 1;
+    padding: 2rem 2rem 2rem 2.5rem;
+    overflow-y: auto;
+    background: rgba(10,25,45,0.75);
+  }
+  main h1 {
+    margin-top: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+  main p {
+    line-height: 1.5;
+    max-width: 900px;
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav {
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 0;
+      height: 100%;
+      top: 0; left: 0;
+      transform: translateX(-300px);
+      box-shadow: 3px 0 12px rgba(0,0,0,0.9);
     }
-
-    /* Login container */
-    #login-container {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(20, 20, 20, 0.85);
-      padding: 2rem;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 15px #000;
-      z-index: 10;
+    nav.visible {
+      transform: translateX(0);
     }
-    #login-container h2 {
-      margin-bottom: 1rem;
-      font-weight: 700;
-      text-align: center;
-      color: #60a5fa;
+    #menuToggle {
+      display: block;
     }
-    #login-container input {
-      width: 100%;
-      padding: 0.7rem;
-      margin-bottom: 1rem;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
+    main {
+      padding: 3rem 1.5rem 1.5rem 1.5rem;
     }
-    #login-container button {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #3b82f6;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #login-container button:hover {
-      background-color: #2563eb;
-    }
-    #login-error {
-      color: #f87171;
-      text-align: center;
-      margin-bottom: 1rem;
-      display: none;
-    }
-
-    /* App container hidden initially */
-    #app-container {
-      display: none;
-      height: 100vh;
-      display: flex;
-      overflow: hidden;
-      z-index: 5;
-    }
-
-    /* Sidebar (menu) */
-    #sidebar {
-      background-color: rgba(15, 23, 42, 0.95);
-      width: 280px;
-      max-width: 280px;
-      height: 100vh;
-      padding-top: 1.5rem;
-      box-sizing: border-box;
-      color: #cbd5e1;
-      overflow-y: auto;
-      position: fixed;
-      left: 0;
-      top: 0;
-      transition: transform 0.3s ease;
-      z-index: 7;
-    }
-
-    #sidebar.hidden {
-      transform: translateX(-100%);
-    }
-
-    #sidebar h3 {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #60a5fa;
-      font-weight: 700;
-    }
-
-    #sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    #sidebar ul li {
-      padding: 0.8rem 1.5rem;
-      cursor: pointer;
-      border-left: 4px solid transparent;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
-    }
-
-    #sidebar ul li:hover {
-      background-color: #334155;
-      border-left-color: #60a5fa;
-      color: white;
-    }
-
-    #sidebar ul li.active {
-      background-color: #1e40af;
-      border-left-color: #3b82f6;
-      color: white;
-      font-weight: 700;
-    }
-
-    /* Toggle menu button for mobile */
-    #menu-toggle {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background: #2563eb;
-      border: none;
-      border-radius: 4px;
-      padding: 0.5rem 0.7rem;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 15;
-      display: none;
-    }
-
-    /* Main content */
-    #main-content {
-      margin-left: 280px;
-      padding: 2rem;
-      flex-grow: 1;
-      overflow-y: auto;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.85);
-      box-sizing: border-box;
-    }
-
-    /* Responsive for small screens */
-    @media (max-width: 768px) {
-      #sidebar {
-        position: fixed;
-        height: 100%;
-        z-index: 20;
-      }
-      #sidebar.hidden {
-        transform: translateX(-100%);
-      }
-      #menu-toggle {
-        display: block;
-      }
-      #main-content {
-        margin-left: 0;
-      }
-    }
-
-    /* Section headings */
-    #main-content h2 {
-      color: #60a5fa;
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-
-  </style>
+  }
+  /* Scrollbar menú */
+  nav ul::-webkit-scrollbar {
+    width: 8px;
+  }
+  nav ul::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+  }
+  nav ul::-webkit-scrollbar-thumb {
+    background: rgba(65,105,225,0.5);
+    border-radius: 4px;
+  }
+</style>
 </head>
 <body>
-
-  <div id="overlay"></div>
-
-  <!-- Login -->
-  <div id="login-container">
-    <h2>Iniciar Sesión</h2>
-    <div id="login-error">Usuario o contraseña incorrectos</div>
-    <input type="text" id="username" placeholder="Usuario" autocomplete="username" />
-    <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" />
-    <button id="login-btn">Entrar</button>
-  </div>
-
-  <!-- App -->
-  <button id="menu-toggle" aria-label="Toggle menú">&#9776;</button>
-  <div id="app-container">
-    <nav id="sidebar" class="hidden" aria-label="Menú principal">
-      <h3>ADR-Soft</h3>
-      <ul id="menu-list" role="menu" aria-orientation="vertical">
-        <li tabindex="0" role="menuitem" class="active">Tablero</li>
-        <li tabindex="0" role="menuitem">GIS</li>
-        <li tabindex="0" role="menuitem">Mapa GIS</li>
-        <li tabindex="0" role="menuitem">Visor</li>
-        <li tabindex="0" role="menuitem">Fast Viewer</li>
-        <li tabindex="0" role="menuitem">Estaciones</li>
-        <li tabindex="0" role="menuitem">Monitoring</li>
-        <li tabindex="0" role="menuitem">Informe personalizado</li>
-        <li tabindex="0" role="menuitem">Informe rosa de los vientos</li>
-        <li tabindex="0" role="menuitem">Consecutive Rains</li>
-        <li tabindex="0" role="menuitem">Vistas</li>
-        <li tabindex="0" role="menuitem">Sinópticos</li>
-        <li tabindex="0" role="menuitem">Custom Synoptics</li>
-        <li tabindex="0" role="menuitem">Supervisor</li>
-        <li tabindex="0" role="menuitem">Estadísticas de red</li>
-        <li tabindex="0" role="menuitem">Registros</li>
-        <li tabindex="0" role="menuitem">Módulos</li>
-        <li tabindex="0" role="menuitem">Túnel</li>
-        <li tabindex="0" role="menuitem">Validador</li>
-      </ul>
-    </nav>
-
-    <main id="main-content" tabindex="0" aria-live="polite">
-      <h2>Tablero</h2>
-      <p>Bienvenido al Tablero principal.</p>
-    </main>
-  </div>
+<div id="app" role="application">
+  <button id="menuToggle" aria-label="Abrir menú">☰</button>
+  <nav id="sidebar" aria-label="Menú principal">
+    <h2>ADR Soft</h2>
+    <ul>
+      <li><button data-section="tablero">Tablero</button></li>
+      <li><button data-section="gis">GIS</button></li>
+      <li><button data-section="mapa-gis">Mapa GIS</button></li>
+      <li><button data-section="visor">Visor</button></li>
+      <li><button data-section="fast-viewer">Fast Viewer</button></li>
+      <li><button data-section="estaciones">Estaciones</button></li>
+      <li><button data-section="monitoring">Monitoring</button></li>
+      <li><button data-section="informe-personalizado">Informe personalizado</button></li>
+      <li><button data-section="informe-rosa-vientos">Informe rosa de los vientos</button></li>
+      <li><button data-section="consecutive-rains">Consecutive Rains</button></li>
+      <li><button data-section="vistas">Vistas</button></li>
+      <li><button data-section="sinopticos">Sinópticos</button></li>
+      <li><button data-section="custom-synoptics">Custom Synoptics</button></li>
+      <li><button data-section="supervisor">Supervisor</button></li>
+      <li><button data-section="estadisticas-red">Estadísticas de red</button></li>
+      <li><button data-section="registros">Registros</button></li>
+      <li><button data-section="modulos">Módulos</button></li>
+      <li><button data-section="tunel">Túnel</button></li>
+      <li><button data-section="validador">Validador</button></li>
+    </ul>
+    <button id="logoutBtn" aria-label="Cerrar sesión" style="margin-top:auto; background:#f87171; color:#fff; border:none; padding:0.7rem 1rem; border-radius:6px; cursor:pointer;">Cerrar sesión</button>
+  </nav>
+  <main id="content" tabindex="0" aria-live="polite">
+    <h1>Bienvenido a ADR Soft</h1>
+    <p>Seleccione una sección del menú para comenzar.</p>
+  </main>
+</div>
 
 <script>
-  // Usuario y contraseña válidos
-  const validUser = 'admin';
-  const validPass = '1234';
-
-  const loginContainer = document.getElementById('login-container');
-  const loginBtn = document.getElementById('login-btn');
-  const loginError = document.getElementById('login-error');
-
-  const appContainer = document.getElementById('app-container');
-  const sidebar = document.getElementById('sidebar');
-  const menuToggle = document.getElementById('menu-toggle');
-  const menuList = document.getElementById('menu-list');
-  const mainContent = document.getElementById('main-content');
-
-  // Toggle menú lateral en móvil
-  menuToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-  });
-
-  // Login
-  loginBtn.addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    if (username === validUser && password === validPass) {
-      loginError.style.display = 'none';
-      loginContainer.style.display = 'none';
-      appContainer.style.display = 'flex';
-      sidebar.classList.remove('hidden');
-      mainContent.focus();
-    } else {
-      loginError.style.display = 'block';
+  (function(){
+    // Validar sesión
+    if(sessionStorage.getItem('authenticated') !== 'true') {
+      window.location.href = 'login.html';
+      return;
     }
-  });
 
-  // Navegación menú: cambiar contenido y ocultar menú en móvil
-  menuList.addEventListener('click', (e) => {
-    if(e.target && e.target.nodeName === 'LI'){
-      // Quitar clase active de todos
-      [...menuList.children].forEach(li => li.classList.remove('active'));
-      // Poner active al seleccionado
-      e.target.classList.add('active');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const content = document.getElementById('content');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const buttons = sidebar.querySelectorAll('ul li button');
 
-      // Cambiar contenido principal según sección (aquí ejemplo simple)
-      const section = e.target.textContent;
-      mainContent.innerHTML = `<h2>${section}</h2><p>Contenido de la sección <strong>${section}</strong>.</p>`;
-      mainContent.focus();
-
-      // Ocultar menú si es móvil
-      if(window.innerWidth <= 768){
-        sidebar.classList.add('hidden');
-      }
-    }
-  });
-
-  // Permitir Enter en inputs para login
-  [document.getElementById('username'), document.getElementById('password')].forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter'){
-        loginBtn.click();
-      }
+    // Muestra u oculta menú lateral en móvil
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('visible');
     });
-  });
-</script>
 
+    // Contenido dummy para cada sección (puedes ampliar aquí la información)
+    const sectionsContent = {
+      'tablero': '<h1>Tablero</h1><p>Panel principal con resumen y estadísticas.</p>',
+      'gis': '<h1>GIS</h1><p>Información y herramientas GIS avanzadas.</p>',
+      'mapa-gis': '<h1>Mapa GIS</h1><p>Visualización geográfica interactiva.</p>',
+      'visor': '<h1>Visor</h1><p>Visor de datos meteorológicos en tiempo real.</p>',
+      'fast-viewer': '<h1>Fast Viewer</h1><p>Visualización rápida y eficiente.</p>',
+      'estaciones': '<h1>Estaciones</h1><p>Estado y datos de estaciones meteorológicas.</p>',
+      'monitoring': '<h1>Monitoring</h1><p>Monitoreo en tiempo real de variables climáticas.</p>',
+      'informe-personalizado': '<h1>Informe personalizado</h1><p>Generación de reportes a medida.</p>',
+      'informe-rosa-vientos': '<h1>Informe rosa de los vientos</h1><p>Análisis de direcciones y velocidades del viento.</p>',
+      'consecutive-rains': '<h1>Consecutive Rains</h1><p>Historial y análisis de lluvias consecutivas.</p>',
+      'vistas': '<h1>Vistas</h1><p>Diferentes vistas y perspectivas de datos.</p>',
+      'sinopticos': '<h1>Sinópticos</h1><p>Mapas sinópticos y análisis atmosféricos.</p>',
+      'custom-synoptics': '<h1>Custom Synoptics</h1><p>Mapas personalizados para análisis avanzados.</p>',
+      'supervisor': '<h1>Supervisor</h1><p>Panel de supervisión y alertas.</p>',
+      'estadisticas-red': '<h1>Estadísticas de red</h1><p>Datos y métricas de red de estaciones.</p>',
+      'registros': '<h1>Registros</h1><p>Logs y registros de eventos.</p>',
+      'modulos': '<h1>Módulos</h1><p>Gestión y configuración de módulos.</p>',
+      'tunel': '<h1>Túnel</h1><p>Visualización y control del túnel.</p>',
+      'validador': '<h1>Validador</h1><p>Herramientas de validación de datos.</p>'
+    };
+
+    // Maneja clic en menú
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Actualiza contenido
+        const section = btn.getAttribute('data-section');
+        content.innerHTML = sectionsContent[section] || '<h1>Sin contenido</h1>';
+
+        // Marca botón activo
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Oculta menú en móvil
+        if(window.innerWidth <= 768) {
+          sidebar.classList.remove('visible');
+        }
+        content.focus();
+      });
+    });
+
+    // Logout limpia sesión y regresa a login
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('authenticated');
+      window.location.href = 'login.html';
+    });
+
+  })();
+</script>
 </body>
   </html>
